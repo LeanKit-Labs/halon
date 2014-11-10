@@ -1,0 +1,171 @@
+{
+    "_versions": [
+        "1"
+    ],
+    "_links": {
+        "board:self": {
+            "href": "/analytics/api/board/{id}",
+            "method": "GET",
+            "templated": true
+        },
+        "board:minimal": {
+            "href": "/analytics/api/board/{id}",
+            "method": "GET",
+            "templated": true
+        },
+        "board:users": {
+            "href": "/analytics/api/board/{id}/user",
+            "method": "GET",
+            "templated": true
+        },
+        "board:cardTypes": {
+            "href": "/analytics/api/board/{id}/cardtype",
+            "method": "GET",
+            "templated": true
+        },
+        "board:classesOfService": {
+            "href": "/analytics/api/board/{id}/classOfService",
+            "method": "GET",
+            "templated": true
+        },
+        "board:lanes": {
+            "href": "/analytics/api/board/{id}/lane",
+            "method": "GET",
+            "templated": true
+        },
+        "cardType:self": {
+            "href": "/analytics/api/board/{id}/cardType/{cardTypeId}",
+            "method": "GET",
+            "templated": true
+        },
+        "classOfService:self": {
+            "href": "/analytics/api/board/{id}/classOfService/{classOfServiceId}",
+            "method": "GET",
+            "templated": true
+        },
+        "lane:self": {
+            "href": "/analytics/api/board/{id}/lane/{laneId}",
+            "method": "GET",
+            "templated": true
+        },
+        "organization:self": {
+            "href": "/analytics/api/organization/{id}",
+            "method": "GET",
+            "templated": true
+        },
+        "user:self": {
+            "href": "/analytics/api/user/{id}",
+            "method": "GET",
+            "templated": true
+        },
+        "user:list": {
+            "href": "/analytics/api/user/",
+            "method": "GET"
+        },
+        "_autohost:api": {
+            "href": "/analytics/api/_autohost",
+            "method": "GET"
+        },
+        "_autohost:resources": {
+            "href": "/analytics/api/_autohost/resource",
+            "method": "GET"
+        },
+        "_autohost:actions": {
+            "href": "/analytics/api/_autohost/action",
+            "method": "GET"
+        },
+        "_autohost:connected-sockets": {
+            "href": "/analytics/api/_autohost/sockets",
+            "method": "GET"
+        },
+        "_autohost:list-users": {
+            "href": "/analytics/api/_autohost/user",
+            "method": "GET"
+        },
+        "_autohost:list-roles": {
+            "href": "/analytics/api/_autohost/role",
+            "method": "GET"
+        },
+        "_autohost:list-user-roles": {
+            "href": "/analytics/api/_autohost/user/{user}/role",
+            "method": "GET",
+            "templated": true
+        },
+        "_autohost:list-action-roles": {
+            "href": "/analytics/api/_autohost/action/{action}/role",
+            "method": "GET",
+            "templated": true
+        },
+        "_autohost:add-action-roles": {
+            "href": "/analytics/api/_autohost/action/{action}/role",
+            "method": "PATCH",
+            "templated": true
+        },
+        "_autohost:remove-action-roles": {
+            "href": "/analytics/api/_autohost/action/{action}/role",
+            "method": "DELETE",
+            "templated": true
+        },
+        "_autohost:add-user-roles": {
+            "href": "/analytics/api/_autohost/user/{user}/role",
+            "method": "PATCH",
+            "templated": true
+        },
+        "_autohost:remove-user-roles": {
+            "href": "/analytics/api/_autohost/user/{user}/role",
+            "method": "DELETE",
+            "templated": true
+        },
+        "_autohost:add-role": {
+            "href": "/analytics/api/_autohost/role/{role}",
+            "method": "POST",
+            "templated": true
+        },
+        "_autohost:remove-role": {
+            "href": "/analytics/api/_autohost/role/{role}",
+            "method": "DELETE",
+            "templated": true
+        },
+        "_autohost:create-user": {
+            "href": "/analytics/api/_autohost/user/{userName}",
+            "method": "POST",
+            "templated": true
+        },
+        "_autohost:change-password": {
+            "href": "/analytics/api/_autohost/user/{userName}",
+            "method": "PATCH",
+            "templated": true
+        },
+        "_autohost:create-token": {
+            "href": "/analytics/api/_autohost/token",
+            "method": "POST"
+        },
+        "_autohost:destroy-token": {
+            "href": "/analytics/api/_autohost/token/{token}",
+            "method": "DELETE",
+            "templated": true
+        },
+        "_autohost:list-tokens": {
+            "href": "/analytics/api/_autohost/token/",
+            "method": "GET"
+        },
+        "_autohost:enable-user": {
+            "href": "/analytics/api/_autohost/user/{userName}",
+            "method": "PUT",
+            "templated": true
+        },
+        "_autohost:disable-user": {
+            "href": "/analytics/api/_autohost/user/{userName}",
+            "method": "DELETE",
+            "templated": true
+        },
+        "_autohost:metrics": {
+            "href": "/analytics/api/_autohost/metrics",
+            "method": "GET"
+        }
+    },
+    "_mediaTypes": [
+        "application/json",
+        "application/hal+json"
+    ]
+}

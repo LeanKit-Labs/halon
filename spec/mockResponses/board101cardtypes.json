@@ -1,0 +1,107 @@
+{
+    "id": "101",
+    "_origin": {
+        "href": "/analytics/api/board/101/cardtype",
+        "method": "GET"
+    },
+    "_links": {
+        "self": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "minimal": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "users": {
+            "href": "/analytics/api/board/101/user",
+            "method": "GET"
+        },
+        "cardTypes": {
+            "href": "/analytics/api/board/101/cardtype",
+            "method": "GET"
+        },
+        "classesOfService": {
+            "href": "/analytics/api/board/101/classOfService",
+            "method": "GET"
+        },
+        "lanes": {
+            "href": "/analytics/api/board/101/lane",
+            "method": "GET"
+        }
+    },
+    "_embedded": {
+        "cardTypes": [
+            {
+                "id": "1",
+                "name": "Issue",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/1",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/1",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "2",
+                "name": "Improvement",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/2",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/2",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "3",
+                "name": "Project",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/3",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/3",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "4",
+                "name": "Task",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/4",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/4",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "5",
+                "name": "Deliverable",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/5",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/5",
+                        "method": "GET"
+                    }
+                }
+            }
+        ]
+    }
+}

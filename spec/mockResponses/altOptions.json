@@ -1,0 +1,16 @@
+{
+    "_versions": [
+        "1"
+    ],
+    "_links": {
+        "board:addLane": {
+            "href": "/analytics/api/board/{boardId}/lane/{id}",
+            "method": "PUT",
+            "templated": true
+        }
+    },
+    "_mediaTypes": [
+        "application/json",
+        "application/hal+json"
+    ]
+}

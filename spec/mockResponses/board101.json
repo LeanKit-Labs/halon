@@ -1,0 +1,563 @@
+{
+    "id": "101",
+    "title": "Test Board A",
+    "description": "The first test board.",
+    "classOfServiceEnabled": true,
+    "organizationId": "1",
+    "laneTypes": [
+        {
+            "laneType": 1,
+            "name": "Ready"
+        },
+        {
+            "laneType": 2,
+            "name": "InProcess"
+        },
+        {
+            "laneType": 3,
+            "name": "Completed"
+        }
+    ],
+    "laneClassTypes": [
+        {
+            "laneClassType": 0,
+            "name": "Active"
+        },
+        {
+            "laneClassType": 1,
+            "name": "Backlog"
+        },
+        {
+            "laneClassType": 2,
+            "name": "Archive"
+        }
+    ],
+    "tags": [
+        "tag1",
+        "tag2",
+        "tag3",
+        "tag4",
+        "tag5",
+        "tag6"
+    ],
+    "priorities": [
+        {
+            "id": 3,
+            "name": "Critical"
+        },
+        {
+            "id": 2,
+            "name": "High"
+        },
+        {
+            "id": 1,
+            "name": "Normal"
+        },
+        {
+            "id": 0,
+            "name": "Low"
+        }
+    ],
+    "_origin": {
+        "href": "/analytics/api/board/101",
+        "method": "GET"
+    },
+    "_links": {
+        "self": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "minimal": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "users": {
+            "href": "/analytics/api/board/101/user",
+            "method": "GET"
+        },
+        "cardTypes": {
+            "href": "/analytics/api/board/101/cardtype",
+            "method": "GET"
+        },
+        "classesOfService": {
+            "href": "/analytics/api/board/101/classOfService",
+            "method": "GET"
+        },
+        "lanes": {
+            "href": "/analytics/api/board/101/lane",
+            "method": "GET"
+        }
+    },
+    "_embedded": {
+        "lanes": [
+            {
+                "id": "303",
+                "name": "Backlog",
+                "description": null,
+                "active": false,
+                "cardLimit": [
+                    0,
+                    0
+                ],
+                "creationDate": "2009-08-19T01:35:56.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "laneClassType": "Backlog",
+                "laneType": "Ready",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/303",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/303",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "304",
+                "name": "Archive",
+                "description": null,
+                "active": false,
+                "cardLimit": [
+                    0,
+                    0
+                ],
+                "creationDate": "2009-08-19T01:35:56.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "laneClassType": "Archive",
+                "laneType": "Ready",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/304",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/304",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "305",
+                "name": "Lane 1",
+                "description": "",
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "laneClassType": "Active",
+                "laneType": "Ready",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/305",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/305",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "306",
+                "name": "Lane 2",
+                "description": "",
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 1,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": "1",
+                "laneClassType": "Active",
+                "laneType": "InProcess",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/306",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/306",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "307",
+                "name": "Lane 3",
+                "description": "",
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 2,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": "2",
+                "laneClassType": "Active",
+                "laneType": "Completed",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/307",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/307",
+                        "method": "GET"
+                    }
+                }
+            }
+        ],
+        "users": [
+            {
+                "id": "101",
+                "username": "testuser@test.com",
+                "firstName": "testuser",
+                "lastName": "board",
+                "fullName": "testuser board",
+                "emailAddress": "testuser@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "MM/dd/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/101",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/101",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "102",
+                "username": "testmanager@test.com",
+                "firstName": "testmanager",
+                "lastName": "board",
+                "fullName": "testmanager board",
+                "emailAddress": "testmanager@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "MM/dd/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/102",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/102",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "103",
+                "username": "testreadonly@test.com",
+                "firstName": "testreadonly",
+                "lastName": "board",
+                "fullName": "testreadonly board",
+                "emailAddress": "testreadonly@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "MM/dd/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/103",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/103",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "105",
+                "username": "yyyymmddUser@test.com",
+                "firstName": "yyyymmddUser",
+                "lastName": "board",
+                "fullName": "yyyymmddUser board",
+                "emailAddress": "yyyymmddUser@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "yyyy/MM/dd",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/105",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/105",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "106",
+                "username": "ddmmyyyyUser@test.com",
+                "firstName": "ddmmyyyyUser",
+                "lastName": "board",
+                "fullName": "ddmmyyyyUser board",
+                "emailAddress": "ddmmyyyyUser@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "dd/MM/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/106",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/106",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "107",
+                "username": "mmddyyyyUser@test.com",
+                "firstName": "mmddyyyyUser",
+                "lastName": "board",
+                "fullName": "mmddyyyyUser board",
+                "emailAddress": "mmddyyyyUser@test.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": null,
+                "dateFormat": "MM/dd/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/107",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/107",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": "1",
+                "username": "root",
+                "firstName": "root",
+                "lastName": "user",
+                "fullName": "root user",
+                "emailAddress": "info@bandit-software.com",
+                "gravatarLink": null,
+                "avatar": null,
+                "lastAccess": "2014-11-06T05:40:00.000Z",
+                "dateFormat": "MM/dd/yyyy",
+                "organizationId": "1",
+                "_origin": {
+                    "href": "/analytics/api/user/1",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/user/1",
+                        "method": "GET"
+                    },
+                    "list": {
+                        "href": "/analytics/api/user/",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            }
+        ],
+        "classesOfService": [
+            {
+                "id": "101",
+                "name": "Standard",
+                "_origin": {
+                    "href": "/analytics/api/board/101/classOfService/101",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/classOfService/101",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "102",
+                "name": "Expedite",
+                "_origin": {
+                    "href": "/analytics/api/board/101/classOfService/102",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/classOfService/102",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "103",
+                "name": "Regulatory",
+                "_origin": {
+                    "href": "/analytics/api/board/101/classOfService/103",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/classOfService/103",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "104",
+                "name": "Date Dependent",
+                "_origin": {
+                    "href": "/analytics/api/board/101/classOfService/104",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/classOfService/104",
+                        "method": "GET"
+                    }
+                }
+            }
+        ],
+        "cardTypes": [
+            {
+                "id": "1",
+                "name": "Issue",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/1",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/1",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "2",
+                "name": "Improvement",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/2",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/2",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "3",
+                "name": "Project",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/3",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/3",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "4",
+                "name": "Task",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/4",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/4",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "5",
+                "name": "Deliverable",
+                "_origin": {
+                    "href": "/analytics/api/board/101/cardType/5",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/cardType/5",
+                        "method": "GET"
+                    }
+                }
+            }
+        ]
+    }
+}

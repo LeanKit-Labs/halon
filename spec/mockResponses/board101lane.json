@@ -1,0 +1,177 @@
+{
+    "id": "101",
+    "_origin": {
+        "href": "/analytics/api/board/101/lane",
+        "method": "GET"
+    },
+    "_links": {
+        "self": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "minimal": {
+            "href": "/analytics/api/board/101",
+            "method": "GET"
+        },
+        "users": {
+            "href": "/analytics/api/board/101/user",
+            "method": "GET"
+        },
+        "cardTypes": {
+            "href": "/analytics/api/board/101/cardtype",
+            "method": "GET"
+        },
+        "classesOfService": {
+            "href": "/analytics/api/board/101/classOfService",
+            "method": "GET"
+        },
+        "lanes": {
+            "href": "/analytics/api/board/101/lane",
+            "method": "GET"
+        }
+    },
+    "_embedded": {
+        "lanes": [
+            {
+                "id": "303",
+                "name": "Backlog",
+                "description": null,
+                "laneClassTypeId": 1,
+                "laneTypeId": 1,
+                "active": false,
+                "cardLimit": [
+                    0,
+                    0
+                ],
+                "creationDate": "2009-08-19T01:35:56.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/303",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/303",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "304",
+                "name": "Archive",
+                "description": null,
+                "laneClassTypeId": 2,
+                "laneTypeId": 1,
+                "active": false,
+                "cardLimit": [
+                    0,
+                    0
+                ],
+                "creationDate": "2009-08-19T01:35:56.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/304",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/304",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "305",
+                "name": "Lane 1",
+                "description": "",
+                "laneClassTypeId": 0,
+                "laneTypeId": 1,
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 0,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": null,
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/305",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/305",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "306",
+                "name": "Lane 2",
+                "description": "",
+                "laneClassTypeId": 0,
+                "laneTypeId": 2,
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 1,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": "1",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/306",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/306",
+                        "method": "GET"
+                    }
+                }
+            },
+            {
+                "id": "307",
+                "name": "Lane 3",
+                "description": "",
+                "laneClassTypeId": 0,
+                "laneTypeId": 3,
+                "active": true,
+                "cardLimit": [
+                    5,
+                    5
+                ],
+                "creationDate": "2009-08-19T01:37:16.000Z",
+                "index": 2,
+                "boardId": "101",
+                "taksBoardId": null,
+                "parentLaneId": null,
+                "activityId": "2",
+                "_origin": {
+                    "href": "/analytics/api/board/101/lane/307",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/101/lane/307",
+                        "method": "GET"
+                    }
+                }
+            }
+        ]
+    }
+}

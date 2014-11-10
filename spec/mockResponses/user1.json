@@ -1,0 +1,253 @@
+{
+    "id": "1",
+    "username": "root",
+    "firstName": "root",
+    "lastName": "user",
+    "fullName": "root user",
+    "emailAddress": "info@bandit-software.com",
+    "gravatarLink": null,
+    "avatar": null,
+    "lastAccess": "2014-11-06T05:40:00.000Z",
+    "dateFormat": "MM/dd/yyyy",
+    "organizationId": "1",
+    "_origin": {
+        "href": "/analytics/api/user/1",
+        "method": "GET"
+    },
+    "_links": {
+        "self": {
+            "href": "/analytics/api/user/1",
+            "method": "GET"
+        },
+        "list": {
+            "href": "/analytics/api/user/",
+            "method": "GET"
+        }
+    },
+    "_embedded": {
+        "organization": {
+            "id": "1",
+            "title": "kanban-cibuild",
+            "description": "The Default Root Organization",
+            "hostName": "kanban-cibuild",
+            "analytics": [
+                {
+                    "title": "Card Distribution",
+                    "slug": "carddistribution",
+                    "workbook": "LeanKitSystemAnalytics",
+                    "view": "FlowDashboard"
+                },
+                {
+                    "title": "Cumulative Flow",
+                    "slug": "cumulativeflow",
+                    "workbook": "LeanKitSystemAnalytics",
+                    "view": "FlowDashboard"
+                },
+                {
+                    "title": "Efficiency",
+                    "slug": "efficiency",
+                    "workbook": "LeanKitSystemAnalytics",
+                    "view": "FlowDashboard"
+                },
+                {
+                    "title": "Process Control",
+                    "slug": "processcontrol",
+                    "workbook": "LeanKitSystemAnalytics",
+                    "view": "ThroughputDashboard"
+                }
+            ],
+            "_origin": {
+                "href": "/analytics/api/organization/1",
+                "method": "GET"
+            },
+            "_links": {
+                "self": {
+                    "href": "/analytics/api/organization/1",
+                    "method": "GET"
+                }
+            }
+        },
+        "recentBoards": [
+            {
+                "id": 115,
+                "title": "Test Board 12",
+                "lastViewed": "2014-11-06T05:41:05.188Z",
+                "_origin": {
+                    "href": "/analytics/api/board/115",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/115",
+                        "method": "GET"
+                    },
+                    "minimal": {
+                        "href": "/analytics/api/board/115",
+                        "method": "GET"
+                    },
+                    "users": {
+                        "href": "/analytics/api/board/115/user",
+                        "method": "GET"
+                    },
+                    "cardTypes": {
+                        "href": "/analytics/api/board/115/cardtype",
+                        "method": "GET"
+                    },
+                    "classesOfService": {
+                        "href": "/analytics/api/board/115/classOfService",
+                        "method": "GET"
+                    },
+                    "lanes": {
+                        "href": "/analytics/api/board/115/lane",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": 109,
+                "title": "Test Board 6",
+                "lastViewed": "2014-11-06T05:41:34.315Z",
+                "_origin": {
+                    "href": "/analytics/api/board/109",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/109",
+                        "method": "GET"
+                    },
+                    "minimal": {
+                        "href": "/analytics/api/board/109",
+                        "method": "GET"
+                    },
+                    "users": {
+                        "href": "/analytics/api/board/109/user",
+                        "method": "GET"
+                    },
+                    "cardTypes": {
+                        "href": "/analytics/api/board/109/cardtype",
+                        "method": "GET"
+                    },
+                    "classesOfService": {
+                        "href": "/analytics/api/board/109/classOfService",
+                        "method": "GET"
+                    },
+                    "lanes": {
+                        "href": "/analytics/api/board/109/lane",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": 112,
+                "title": "Test Board 9",
+                "lastViewed": "2014-11-06T05:40:47.021Z",
+                "_origin": {
+                    "href": "/analytics/api/board/112",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/112",
+                        "method": "GET"
+                    },
+                    "minimal": {
+                        "href": "/analytics/api/board/112",
+                        "method": "GET"
+                    },
+                    "users": {
+                        "href": "/analytics/api/board/112/user",
+                        "method": "GET"
+                    },
+                    "cardTypes": {
+                        "href": "/analytics/api/board/112/cardtype",
+                        "method": "GET"
+                    },
+                    "classesOfService": {
+                        "href": "/analytics/api/board/112/classOfService",
+                        "method": "GET"
+                    },
+                    "lanes": {
+                        "href": "/analytics/api/board/112/lane",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": 102,
+                "title": "Wide Lanes",
+                "lastViewed": "2014-11-06T05:40:41.278Z",
+                "_origin": {
+                    "href": "/analytics/api/board/102",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/102",
+                        "method": "GET"
+                    },
+                    "minimal": {
+                        "href": "/analytics/api/board/102",
+                        "method": "GET"
+                    },
+                    "users": {
+                        "href": "/analytics/api/board/102/user",
+                        "method": "GET"
+                    },
+                    "cardTypes": {
+                        "href": "/analytics/api/board/102/cardtype",
+                        "method": "GET"
+                    },
+                    "classesOfService": {
+                        "href": "/analytics/api/board/102/classOfService",
+                        "method": "GET"
+                    },
+                    "lanes": {
+                        "href": "/analytics/api/board/102/lane",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            },
+            {
+                "id": 107,
+                "title": "Test Board 4",
+                "lastViewed": "2014-11-06T05:40:34.370Z",
+                "_origin": {
+                    "href": "/analytics/api/board/107",
+                    "method": "GET"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/analytics/api/board/107",
+                        "method": "GET"
+                    },
+                    "minimal": {
+                        "href": "/analytics/api/board/107",
+                        "method": "GET"
+                    },
+                    "users": {
+                        "href": "/analytics/api/board/107/user",
+                        "method": "GET"
+                    },
+                    "cardTypes": {
+                        "href": "/analytics/api/board/107/cardtype",
+                        "method": "GET"
+                    },
+                    "classesOfService": {
+                        "href": "/analytics/api/board/107/classOfService",
+                        "method": "GET"
+                    },
+                    "lanes": {
+                        "href": "/analytics/api/board/107/lane",
+                        "method": "GET"
+                    }
+                },
+                "_embedded": {}
+            }
+        ]
+    }
+}
