@@ -81,7 +81,7 @@ client._actions.user.self({ id: 12 }).then(user) {
 	var toRemove = user.addresses.filter(function(address) {
 		return address.city === "Nashville";
 	})[0];
-	user.deleteAddress({ id: toRemove.id }).then(function(){
+	user._actions.deleteAddress({ id: toRemove.id }).then(function(){
 		console.log("Buh bye Nashville....");
 	});
 });
