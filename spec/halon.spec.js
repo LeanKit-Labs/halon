@@ -79,7 +79,8 @@ describe( "halon", function() {
 				} );
 				results[ 2 ][ 1 ].should.eql( {
 					data: { id: 101 },
-					headers: { Accept: "application/hal.v1+json" }
+					headers: { Accept: "application/hal.v1+json" },
+					server: "http://localhost:8088"
 				} );
 				results[ 3 ][ 0 ].should.eql( {
 					href: "/analytics/api/user/1",
@@ -88,7 +89,8 @@ describe( "halon", function() {
 				} );
 				results[ 3 ][ 1 ].should.eql( {
 					data: { id: 1 },
-					headers: { Accept: "application/hal.v1+json" }
+					headers: { Accept: "application/hal.v1+json" },
+					server: "http://localhost:8088"
 				} );
 			} );
 			it( "should create expected options structure on halon client instance", function() {
@@ -254,7 +256,8 @@ describe( "halon", function() {
 				} );
 				results[ 2 ][ 1 ].should.eql( {
 					data: { id: 101 },
-					headers: { Accept: "application/hal.v3+json" }
+					headers: { Accept: "application/hal.v3+json" },
+					server: "http://localhost:8088"
 				} );
 			} );
 			it( "should create _actions on returned resource", function() {
@@ -307,7 +310,7 @@ describe( "halon", function() {
 					href: "/analytics/api/board/101/lane",
 					method: "GET"
 				} );
-				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" } } );
+				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should create _actions on returned resource", function() {
 				( typeof lanes._actions.self ).should.equal( "function" );
@@ -370,7 +373,7 @@ describe( "halon", function() {
 						method: "PUT",
 						templated: true
 					} );
-					results[ 2 ][ 1 ].should.eql( { data: lane, headers: { Accept: "application/hal.v3+json" } } );
+					results[ 2 ][ 1 ].should.eql( { data: lane, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 				} );
 			} );
 		} );
