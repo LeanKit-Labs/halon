@@ -1,12 +1,12 @@
-##halon v0.0.1
+#halon v0.0.3
 
-###Obligatory Disclaimer
+##Obligatory Disclaimer
 This project is not stable yet - expect *lots* of change. Don't say we didn't warn you. :-)
 
-###What Is It?
+##What Is It?
 Halon is a hypermedia client library for both browser and node.js usage. It attempts to follow the [JSON Hypertext Application Language (HAL)](https://tools.ietf.org/html/draft-kelly-json-hal-06) draft spec, and includes some additional data we feel is important. At LeanKit, we're using it in tandem with [autohost](https://github.com/LeanKit-Labs/autohost/) and [hyped](https://github.com/LeanKit-Labs/hyped/).
 
-###Initializing a Client
+##Initializing a Client
 
 ```javascript
 var client = halon({
@@ -26,7 +26,7 @@ The `options` arg that's passed to halon can contain the following:
 * `adapter` - a function with the signature of `(link, options)` that handles translating halon's meta data to the HTTP transport of your choice. a jQuery adapter is included in halon and can be accessed by call `halon.jQueryAdapter($)` (note that you need to pass jQuery to the method call).
 * `version` - defaults to "1". Allows you to set the api version. Halon will then change the `Accept` header value appropriately (e.g. - version 2 would get you `application/hal.v2+json`).
 
-###Root API
+##Root API
 Halon only needs your root API. As it initializes, it will make an `OPTIONS` request against this url, and the options returned from the server will be processed, creating resource methods you can invoke on your client instance. Any resources (and their related "rels") will be available under client._actions. For example, if your server returns an options response like this, the methods `client._actions.user.self` and `client._actions.user.addresses` would be available:
 
 ```javascript
@@ -63,7 +63,7 @@ client.onReady( function( client ) {
 } );
 ```
 
-###Getting Resources
+##Getting Resources
 
 Let's say the first thing you want to do, after we've processed our options response, is fetch a user resource, using the "self" rel:
 
@@ -89,9 +89,45 @@ client._actions.user.self({ id: 12 }).then(user) {
 
 You can see from the above example that we can "follow links" that are returned with the root `OPTIONS` response, as well as links included with a returned resource.
 
-###Adapters
-Halon does not have an opinion about which XHR abstraction you use. Due to the popularity of jQuery, we include one for `$.ajax`. It looks like this:
+##Adapters
+Halon uses an adapter approach to handling the actual transport concern. An adapter is simply a function that takes `link` and `options` arguments and returns a promise. The promise is expected to resolve to an object (vs. a string or stream of the response body).
 
+###link
+
+The `link` argument will always specify the relative url and method.
+```javascript
+// a templated example - this means `id` needs to be included
+// on the options.data member passed as the second arg to the adapter
+{
+	href: "/api/user/{id}",
+	method: "GET",
+	templated: true
+}
+```
+
+###options
+
+The `options` argument can currently contain `data`, `headers` and `server` properties. If we're requesting user ID 34, for example, the `options` argument might look like this (note that halon includes the `Accept` value under `headers` for you by default:
+
+```javascript
+{
+	data: { id: 34 },
+	headers: {
+		Accept: "application/hal+json"
+	}
+}
+```
+
+###defaults
+
+If you are planning to new up several halon client instances, you can specify a default adapter by calling `halon.defaultAdapter()` and passing the default adapter function. After doing this, you won't have to specify an `adapter` property on your options argument unless you're overriding the default you specified.
+
+### Included Adapters
+Halon comes with two built-in adapters: one for the browser, and one for Node.js.
+#### jQuery
+Halon does not have an opinion about which XHR abstraction you use. Due to the popularity of jQuery, we include one for `$.ajax`.
+
+__implementation__
 ```javascript
 var jQueryAdapter = function( $ ) {
 	return function( link, options ) {
@@ -106,38 +142,26 @@ var jQueryAdapter = function( $ ) {
 };
 ```
 
-The function returned takes a `links` object which will look something similar to this example:
+#### request
+Halon provides an adapter that takes an existing [`request`](https://github.com/request/) instance and optional auth header.
 
 ```javascript
-// a templated example - this means `id` needs to be included
-// on the options.data member passed as the second arg to the adapter
-{
-	href: "/api/user/{id}",
-	method: "GET",
-	templated: true
-}
+var halon = require( "halon" );
+var request = require( "request" );
+var client = halon( { root: "http://yourserver/api", adapter: halon.requestAdapter( request, [authHeader] ) } );
 ```
 
-The `options` argument can currently contain `data` and `headers` properties. If we're requesting user ID 34, for example, the `options` argument might look like this (note that halon includes the `Accept` value under `headers` for you by default:
-
+Where `authHeader` might look like:
 ```javascript
-{
-	data: { id: 34 },
-	headers: {
-		Accept: "application/hal+json"
-	}
-}
-```
+{ authorization: "Basic dGVzdDp0ZXN0" }
+``` 
 
-If you are planning to new up several halon client instances, you can specify a default adapter by calling `halon.defaultAdapter()` and passing the default adapter function. After doing this, you won't have to specify an `adapter` property on your options argument unless you're overriding the default you specified.
-
-###Wait, What Are You Doing in Addition to HAL?
+##Wait, What Are You Doing in Addition to HAL?
 Our rels contain the HTTP method, and our resources contain and `_origin` property which specifies the url that was hit to return that representation. Note that this will often overlap with `self`, but this will not always be the case. The `_origin` value will be used for optional caching on `GET` requests in the near future.
 
-###Building and Testing
+##Building and Testing
 
 * Be sure to run `npm install` from the root of this project to install dependencies
 * To build, run `gulp` in your console at the root of the project
 * To test, run npm test in your console at the root of the project
-
 

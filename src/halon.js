@@ -105,7 +105,7 @@
 			},
 			initializing: {
 				_onEnter: function() {
-					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: { Accept: "application/hal.v" + this.version + "+json" } } )
+					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: { Accept: "application/hal.v" + this.version + "+json" }, server: this.server } )
 						.then(
 							this.handle.bind( this, "root.loaded" ), function( err ) {
 								console.warn( err );
@@ -129,7 +129,7 @@
 					if ( resourceDef.templated ) {
 						resourceDef = _.extend( {}, resourceDef, { href: URI.expand( resourceDef.href, data ).href() } );
 					}
-					this.adapter( resourceDef, { data: data, headers: { Accept: "application/hal.v" + this.version + "+json" } } )
+					this.adapter( resourceDef, { data: data, headers: { Accept: "application/hal.v" + this.version + "+json" }, server: this.server } )
 						.then( function( response ) {
 							return when.promise( function( resolve, reject ) {
 								if ( !response ) {
@@ -158,6 +158,7 @@
 			return when.all( args );
 		};
 		options = _.defaults( options, defaults );
+		options.server = /http(s)?[:][\/]{2}[^\/]*/.exec( options.root )[ 0 ];
 		options.client = client;
 
 		var fsm = client.fsm = new HalonClientFsm( options );
@@ -203,6 +204,33 @@
 				headers: options.headers,
 				dataType: "json",
 				data: options.data
+			} );
+		};
+	};
+
+	halonFactory.requestAdapter = function( request, authHeader ) {
+		return function( link, options ) {
+			var json = _.isString( options.data ) ? 
+				options.data : 
+				JSON.stringify( options.data );
+			var headers = deepExtend( options.headers, authHeader );
+			var url = link.href.indexOf( options.server ) < 0 ?
+				options.server + link.href :
+				link.href;
+			console.log( url, options.root, link.href );
+			return when.promise( function( resolve, reject ) {
+				request( {
+					url: url,
+					method: link.method,
+					headers: headers,
+					body: json,
+				}, function( err, resp, body ) {
+					if( err ) {
+						reject( err );
+					} else {
+						resolve( JSON.parse( body ) );
+					}
+				} );
 			} );
 		};
 	};
