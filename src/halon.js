@@ -37,14 +37,16 @@
 		return target;
 	}
 
-	function invokeResource( fsm, key, data ) {
+	function invokeResource( fsm, key, data, headers ) {
 		data = data || {};
+		headers = headers || {};
 		return when.promise( function( resolve, reject ) {
 			fsm.handle(
 				"invoke.resource",
 				this,
 				key,
 				data,
+				headers,
 				resolve,
 				reject
 			);
@@ -105,7 +107,7 @@
 			},
 			initializing: {
 				_onEnter: function() {
-					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: { Accept: "application/hal.v" + this.version + "+json" } } )
+					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: this.getHeaders() } )
 						.then(
 							this.handle.bind( this, "root.loaded" ), function( err ) {
 								console.warn( err );
@@ -121,7 +123,7 @@
 				}
 			},
 			ready: {
-				"invoke.resource": function( resource, rel, data, success, err ) {
+				"invoke.resource": function( resource, rel, data, headers, success, err ) {
 					var resourceDef = resource._links[ rel ];
 					if ( !resourceDef ) {
 						throw new Error( "No link definition for rel '" + rel + "'" );
@@ -129,7 +131,7 @@
 					if ( resourceDef.templated ) {
 						resourceDef = _.extend( {}, resourceDef, { href: URI.expand( resourceDef.href, data ).href() } );
 					}
-					this.adapter( resourceDef, { data: data, headers: { Accept: "application/hal.v" + this.version + "+json" } } )
+					this.adapter( resourceDef, { data: data, headers: this.getHeaders( headers ) } )
 						.then( function( response ) {
 							return when.promise( function( resolve, reject ) {
 								if ( !response ) {
@@ -143,13 +145,18 @@
 						.then( success, err );
 				}
 			}
+		},
+
+		getHeaders: function( hdrs ) {
+			return _.extend( {}, this.headers, ( hdrs || {} ), { Accept: "application/hal.v" + this.version + "+json" } );
 		}
 	} );
 
 	var defaults = {
 		version: 1,
 		knownOptions: {},
-		adapter: _defaultAdapter
+		adapter: _defaultAdapter,
+		headers: {}
 	};
 
 	var halonFactory = function( options ) {

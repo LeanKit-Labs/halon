@@ -101,6 +101,127 @@ describe( "halon", function() {
 				results[ 0 ][ 1 ].headers.Accept.should.equal( "application/hal.v1+json" );
 			} );
 		} );
+		describe( "when using custom headers", function() {
+			describe( "with client-level headers", function() {
+				var hc;
+				var results = [];
+				before( function( done ) {
+					hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {
+							board: [ "self", "users", "cardTypes" ],
+							user: [ "self" ]
+						},
+						adapter: adapterFactory( results ),
+						version: 1,
+						headers: {
+							"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+							"If-Match": "8675309"
+						}
+					} );
+					hc.onReady( function( hc ) {
+						hc._actions.board.self( { id: 101 } ).then( function() {
+							done();
+						} );
+					} );
+				} );
+				it( "should send custom headers with OPTIONS request", function() {
+					results[ 0 ][ 1 ].headers.should.eql( {
+						Accept: "application/hal.v1+json",
+						"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+						"If-Match": "8675309"
+					} );
+				} );
+				it( "should send custom headers with resource request", function() {
+					results[ 2 ][ 1 ].headers.should.eql( {
+						Accept: "application/hal.v1+json",
+						"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+						"If-Match": "8675309"
+					} );
+				} );
+			} );
+			describe( "with resource-level headers specified", function() {
+				var hc;
+				var results = [];
+				before( function( done ) {
+					hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {
+							board: [ "self", "users", "cardTypes" ],
+							user: [ "self" ]
+						},
+						adapter: adapterFactory( results ),
+						version: 1
+					} );
+					hc.onReady( function( hc ) {
+						hc._actions.board.self(
+							{
+								id: 101
+							},
+							{
+								"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+								"If-Match": "8675309"
+							}
+						).then( function() {
+							done();
+						} );
+					} );
+				} );
+				it( "should NOT send custom headers with OPTIONS request", function() {
+					results[ 0 ][ 1 ].headers.should.eql( { Accept: "application/hal.v1+json" } );
+				} );
+				it( "should send custom headers with resource request", function() {
+					results[ 2 ][ 1 ].headers.should.eql( {
+						Accept: "application/hal.v1+json",
+						"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+						"If-Match": "8675309"
+					} );
+				} );
+			} );
+			describe( "with client-level AND resource-level headers specified", function() {
+				var hc;
+				var results = [];
+				before( function( done ) {
+					hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {
+							board: [ "self", "users", "cardTypes" ],
+							user: [ "self" ]
+						},
+						adapter: adapterFactory( results ),
+						version: 1,
+						headers: {
+							"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT"
+						}
+					} );
+					hc.onReady( function( hc ) {
+						hc._actions.board.self(
+							{
+								id: 101
+							},
+							{
+								"If-Match": "8675309"
+							}
+						).then( function() {
+							done();
+						} );
+					} );
+				} );
+				it( "should send client-level custom headers with OPTIONS request", function() {
+					results[ 0 ][ 1 ].headers.should.eql( {
+						Accept: "application/hal.v1+json",
+						"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT"
+					} );
+				} );
+				it( "should send client and resource-level headers with resource request", function() {
+					results[ 2 ][ 1 ].headers.should.eql( {
+						Accept: "application/hal.v1+json",
+						"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+						"If-Match": "8675309"
+					} );
+				} );
+			} );
+		} );
 	} );
 
 	describe( "when using a halon instance", function() {
