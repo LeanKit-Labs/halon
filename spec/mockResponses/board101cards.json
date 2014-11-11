@@ -1,0 +1,38 @@
+{
+	"_origin": { "href": "/analytics/api/board/100/card", "method": "GET" },
+	"cards": [ 
+		{ 
+			"id": 301,
+			"title": "Card 1",
+			"description": "This is card 1",
+			"_origin": { "href": "/analytics/api/card/301", "method": "GET" },
+			"_links": { 
+				"self": { "href": "/analytics/api/card/301", "method": "GET" },
+				"move": { "href": "/analytics/api/card/301/board/{boardId}/lane/{laneId}", "method": "PUT", "templated": true },
+				"block": { "href": "/analytics/api/card/301/block", "method": "PUT" } 
+			}
+		},
+		{
+			"id": 302,
+			"title": "Card 2",
+			"description": "This is card 2",
+			"_origin": { "href": "/analytics/api/card/302", "method": "GET" },
+			"_links": { 
+				"self": { "href": "/analytics/api/card/302", "method": "GET" },
+				"move": { "href": "/analytics/api/card/302/board/{boardId}/lane/{laneId}", "method": "PUT", "templated": true },
+				"block": { "href": "/analytics/api/card/302/block", "method": "PUT" } 
+			}
+		},
+		{
+			"id": 303,
+			"title": "Card 3",
+			"description": "This is card 3",
+			"_origin": { "href": "/analytics/api/card/303", "method": "GET" },
+			"_links": { 
+				"self": { "href": "/analytics/api/card/303", "method": "GET" },
+				"move": { "href": "/analytics/api/card/303/board/{boardId}/lane/{laneId}", "method": "PUT", "templated": true },
+				"block": { "href": "/analytics/api/card/303/block", "method": "PUT" } 
+			}
+		}
+	]
+}

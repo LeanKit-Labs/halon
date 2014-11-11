@@ -4,6 +4,7 @@ require( "mocha" );
 var should = require( "should" ); //jshint ignore:line
 var expectedOptionsResponse = require( "./mockResponses/options.json" );
 var expectedBoardResponse = require( "./mockResponses/board101.json" );
+var expectedCardResponse = require( "./mockResponses/board101cards.json" );
 var expectedCardTypeResponse = require( "./mockResponses/board101cardtypes.json" );
 var expectedUserResponse = require( "./mockResponses/user1.json" );
 var _ = require( "lodash" );
@@ -264,6 +265,7 @@ describe( "halon", function() {
 				( typeof board._actions.self ).should.equal( "function" );
 				( typeof board._actions.minimal ).should.equal( "function" );
 				( typeof board._actions.users ).should.equal( "function" );
+				( typeof board._actions.cards ).should.equal( "function" );
 				( typeof board._actions.cardTypes ).should.equal( "function" );
 				( typeof board._actions.classesOfService ).should.equal( "function" );
 				( typeof board._actions.lanes ).should.equal( "function" );
@@ -405,6 +407,57 @@ describe( "halon", function() {
 						boardResponse.should.eql( expectedBoardResponse );
 						cardTypesReponse.should.eql( expectedCardTypeResponse );
 						done();
+					} );
+				} );
+			} );
+		} );
+
+		describe( "when following an action that returns a collection", function() {
+			var hc;
+			var results = [];
+			var cards;
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {
+						board: [ "cards" ]
+					},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.board.cards( { id: 101 } ).then( function( result ) {
+						cards = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should pass expected arguments to the adapter", function() {
+				results[ 2 ][ 0 ].should.eql( {
+					href: "/analytics/api/board/101/card",
+					method: "GET",
+					templated: true
+				} );
+				results[ 2 ][ 1 ].should.eql( { data: { id: 101 }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
+			} );
+			it( "should create _actions on returned resources", function() {
+				_.each( cards, function( card ) {
+					( typeof card._actions.self ).should.equal( "function" );
+					( typeof card._actions.block ).should.equal( "function" );
+					( typeof card._actions.move ).should.equal( "function" );
+				} );
+			} );
+			it( "should return expected number of resources", function() {
+				cards.length.should.equal( 3 );
+			} );
+			it( "should keep resource data in-tact", function() {
+				var propsToCheck = [ "_links", "id", "title", "description", "_origin" ];
+				_.each( cards, function( card ) {
+					var expectedCard = _.where( expectedCardResponse.cards, { id: card.id } );
+					_.each( expectedCard, function( val, key ) {
+						if ( propsToCheck.indexOf( key ) !== -1 ) {
+							val.should.eql( card[ key ] );
+						}
 					} );
 				} );
 			} );

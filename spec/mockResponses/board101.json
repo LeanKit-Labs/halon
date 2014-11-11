@@ -75,6 +75,10 @@
             "href": "/analytics/api/board/101/user",
             "method": "GET"
         },
+        "cards": {
+            "href": "/analytics/api/board/101/card",
+            "method": "GET" 
+        },
         "cardTypes": {
             "href": "/analytics/api/board/101/cardtype",
             "method": "GET"

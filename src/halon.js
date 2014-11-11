@@ -53,6 +53,17 @@
 		}.bind( this ) );
 	}
 
+	function processResponse( response, fsm ) {
+		if( !response._links ) {
+			var listKey = _.keys( response )[ 1 ];
+			return _.map( response[ listKey ], function( item ) {
+				return processEmbedded( processLinks( item, fsm ) );
+			} );
+		} else {
+			return processEmbedded( processLinks( response, fsm ) );
+		}
+	}
+
 	function processEmbedded( response ) {
 		if ( response._embedded ) {
 			_.each( response._embedded, function( value, key ) {
@@ -139,7 +150,7 @@
 									err.resourceDef = resourceDef;
 									reject( err );
 								}
-								resolve( processEmbedded( processLinks( response, this ) ) );
+								resolve( processResponse( response, this ) );
 							}.bind( this ) );
 						}.bind( this ) )
 						.then( success, err );
