@@ -131,6 +131,33 @@ The `options` argument can currently contain `data` and `headers` properties. If
 
 If you are planning to new up several halon client instances, you can specify a default adapter by calling `halon.defaultAdapter()` and passing the default adapter function. After doing this, you won't have to specify an `adapter` property on your options argument unless you're overriding the default you specified.
 
+###Specifying Custom Headers
+
+Halon will always provide an `Accept` header value for you, but you can provide your own headers to be sent along with every request (at the client level) and/or at the resource level:
+
+```javascript
+// To provide client-level headers, provide a `headers`
+// property on your halon options object:
+var hc = halon( {
+	root: "http://your.server.com/api",
+	adapter: halon.jQueryAdapter( $ ),
+	headers: {
+		"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT"
+	}
+} );
+
+// To provide resource-level headers, pass a headers object
+// as the second argument to the resource action method:
+hc._actions.board.self(
+	{ id: 101 },
+	{ "If-Match": "8675309" }
+).then( function() {
+	done();
+} );
+```
+
+Halon will extend resource-level headers over the client-level headers if a headers object is passed at the resource level (thus it will override headers by the same key at the client level). Halon's `Accept` header value will alway override any other `Accept` header value.
+
 ###Wait, What Are You Doing in Addition to HAL?
 Our rels contain the HTTP method, and our resources contain and `_origin` property which specifies the url that was hit to return that representation. Note that this will often overlap with `self`, but this will not always be the case. The `_origin` value will be used for optional caching on `GET` requests in the near future.
 
