@@ -415,7 +415,7 @@ describe( "halon", function() {
 		describe( "when following an action that returns a collection", function() {
 			var hc;
 			var results = [];
-			var cards;
+			var collection;
 			before( function( done ) {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
@@ -427,7 +427,7 @@ describe( "halon", function() {
 				} );
 				hc.onReady( function( hc ) {
 					hc._actions.board.cards( { id: 101 } ).then( function( result ) {
-						cards = result;
+						collection = result;
 						done();
 					} );
 				} );
@@ -441,18 +441,21 @@ describe( "halon", function() {
 				results[ 2 ][ 1 ].should.eql( { data: { id: 101 }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should create _actions on returned resources", function() {
-				_.each( cards, function( card ) {
+				_.each( collection.cards, function( card ) {
 					( typeof card._actions.self ).should.equal( "function" );
 					( typeof card._actions.block ).should.equal( "function" );
 					( typeof card._actions.move ).should.equal( "function" );
 				} );
 			} );
 			it( "should return expected number of resources", function() {
-				cards.length.should.equal( 3 );
+				collection.cards.length.should.equal( 3 );
+			} );
+			it( "should preserve _origin", function() {
+				collection._origin.should.eql( { href: "/analytics/api/board/101/card", method: "GET" } );
 			} );
 			it( "should keep resource data in-tact", function() {
 				var propsToCheck = [ "_links", "id", "title", "description", "_origin" ];
-				_.each( cards, function( card ) {
+				_.each( collection.cards, function( card ) {
 					var expectedCard = _.where( expectedCardResponse.cards, { id: card.id } );
 					_.each( expectedCard, function( val, key ) {
 						if ( propsToCheck.indexOf( key ) !== -1 ) {

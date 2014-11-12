@@ -1,5 +1,5 @@
 {
-	"_origin": { "href": "/analytics/api/board/100/card", "method": "GET" },
+	"_origin": { "href": "/analytics/api/board/101/card", "method": "GET" },
 	"cards": [ 
 		{ 
 			"id": 301,

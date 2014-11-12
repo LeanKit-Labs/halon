@@ -60,9 +60,11 @@
 				.filter( function( x ) { 
 					return x !== "_origin";
 				} )[0];
-			return _.map( response[ listKey ], function( item ) {
+			var base = { _origin: response._origin };
+			base[ listKey ] = _.map( response[ listKey ], function( item ) {
 				return processEmbedded( processLinks( item, fsm ) );
 			} );
+			return base;
 		} else {
 			return processEmbedded( processLinks( response, fsm ) );
 		}
