@@ -18,6 +18,11 @@
             "method": "GET",
             "templated": true
         },
+        "board:cards": {
+            "href": "/analytics/api/board/{id}/card",
+            "method": "GET",
+            "templated": true    
+        },
         "board:cardTypes": {
             "href": "/analytics/api/board/{id}/cardtype",
             "method": "GET",

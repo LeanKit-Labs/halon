@@ -53,6 +53,23 @@
 		}.bind( this ) );
 	}
 
+	function processResponse( response, fsm ) {
+		// detect whether or not a top-level list of collections has been returned
+		if( !response._links ) {
+			var listKey = Object.keys( response )
+				.filter( function( x ) { 
+					return x !== "_origin";
+				} )[0];
+			var base = { _origin: response._origin };
+			base[ listKey ] = _.map( response[ listKey ], function( item ) {
+				return processEmbedded( processLinks( item, fsm ) );
+			} );
+			return base;
+		} else {
+			return processEmbedded( processLinks( response, fsm ) );
+		}
+	}
+
 	function processEmbedded( response ) {
 		if ( response._embedded ) {
 			_.each( response._embedded, function( value, key ) {
@@ -139,7 +156,7 @@
 									err.resourceDef = resourceDef;
 									reject( err );
 								}
-								resolve( processEmbedded( processLinks( response, this ) ) );
+								resolve( processResponse( response, this ) );
 							}.bind( this ) );
 						}.bind( this ) )
 						.then( success, err );
