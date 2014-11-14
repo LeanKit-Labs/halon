@@ -118,6 +118,20 @@ The `options` argument can currently contain `data`, `headers` and `server` prop
 }
 ```
 
+####parameters
+
+There are two ways to pass parameters to a URL. The preferred way is to include parameter arguments directly. This will introduce the least amount of coupling to how a particular action is implemented (path variables vs. query parameters vs. request body).
+
+You can also supply a `?` property to the `options` argument to define parameters as well.
+
+```javascript
+// trust that the URL defines these variables either by path or query parameters
+client._actions.board.list( { page: 1, limit: 10 } );
+
+// pass parameters explicitly - could lead to your call failing later if the route changes
+client._actions.board.list( { '?': { page: 1, limit: 10 } } )
+```
+
 ###defaults
 
 If you are planning to new up several halon client instances, you can specify a default adapter by calling `halon.defaultAdapter()` and passing the default adapter function. After doing this, you won't have to specify an `adapter` property on your options argument unless you're overriding the default you specified.

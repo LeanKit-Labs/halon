@@ -20,21 +20,21 @@
 
 	var _defaultAdapter;
 
-	// special case extend for resource objects only
-	// NOTE: intentionally not supporting arrays, since
-	// they are not a current use case for this need
-	function deepExtend( target ) {
-		_.each( Array.prototype.slice.call( arguments, 1 ), function( source ) {
-			_.each( source, function( val, key ) {
-				if ( typeof val === "object" ) {
-					target[ key ] = target[ key ] || {};
-					deepExtend( target[ key ], val );
-				} else {
-					target[ key ] = val;
+	function expandLink( action, data ) {
+		var href = URI.expand( action.href, data ).href();
+		var query = data[ "?" ];
+		if( query ) {
+			href = href + "?" + _.map( query, function( val, param ) { 
+				return param + "=" + URI.encode( val ); 
+			} ).join( "&" );
+		} else if( action.parameters ) {
+			href = href + "?" + _.compact( _.map( action.parameters, function( param, key ) {
+				if( data[ key ] ) {
+					return key + "=" + URI.encode( data[ key ] );
 				}
-			} );
-		} );
-		return target;
+			} ) ).join( "&" );
+		}
+		return href;
 	}
 
 	function invokeResource( fsm, key, data, headers ) {
@@ -132,7 +132,7 @@
 					);
 				},
 				"root.loaded": function( options ) {
-					deepExtend( this.client, processLinks( options, this ) );
+					_.merge( this.client, processLinks( options, this ) );
 					this.transition( "ready" );
 				},
 				"invoke.resource": function() {
@@ -145,8 +145,8 @@
 					if ( !resourceDef ) {
 						throw new Error( "No link definition for rel '" + rel + "'" );
 					}
-					if ( resourceDef.templated ) {
-						resourceDef = _.extend( {}, resourceDef, { href: URI.expand( resourceDef.href, data ).href() } );
+					if ( resourceDef.templated || resourceDef.parameters || data[ '?' ] ) {
+						resourceDef = _.extend( {}, resourceDef, { href: expandLink( resourceDef, data ) } );
 					}
 					this.adapter( resourceDef, { data: data, headers: this.getHeaders( headers ), server: this.server } )
 						.then( function( response ) {
