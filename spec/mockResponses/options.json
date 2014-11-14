@@ -180,6 +180,10 @@
         "package:project": {
             "href": "/analytics/api/nonstop/project",
             "method": "GET"
+        },
+        "package:upload": {
+            "href": "/analytics/api/nonstop/upload",
+            "method": "POST"
         }
     },
     "_mediaTypes": [

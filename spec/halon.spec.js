@@ -1,5 +1,6 @@
 var halon = require( "../src/halon.js" );
 var adapterFactory = require( "./adapterStub.js" );
+var requestFactory = require( "./requestStub.js" );
 require( "mocha" );
 var should = require( "should" ); //jshint ignore:line
 var expectedOptionsResponse = require( "./mockResponses/options.json" );
@@ -566,6 +567,38 @@ describe( "halon", function() {
 			} );
 			it( "should return list of packages", function() {
 				list.projects.length.should.equal( 0 );
+			} );
+		} );
+		
+		describe( "when extending request object (Node JS only)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			before( function( done ) {
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.package.upload( {
+						_onRequest: function( req ) {
+
+							req.form().append( "myFile.txt", { pretendFileStream: true } );
+						}
+					} ).then( function( result ) {
+						resp = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should return an empty response", function() {
+				resp.should.eql( {} );
+			} );
+
+			it( "should call form and append on request object", function() {
+				fauxRequest.state.appended[ 0 ].should.eql( [ "myFile.txt", { pretendFileStream: true } ] );
 			} );
 		} );
 	} );

@@ -165,6 +165,21 @@ var request = require( "request" );
 var client = halon( { root: "http://yourserver/api", adapter: halon.requestAdapter( request ) } );
 ```
 
+__Form submission & Uploads__
+`request` supports uploads and multipart form submission via extension methods `form` and `append`. You can attach an `_onRequest` property in your call with a callback that will be invoked with the `request` object allowing you to call these extension methods and handle the form submission yourself.
+
+```javascript
+// here's an example showing how you could handle file uploads
+function uploadFile( fileName, filePath )
+	return function( req ) {
+		req.form().append( fileName, fs.createReadStream( filePath ) );
+	};
+}
+
+// assuming you have a resource named "file" and a POST action "upload"
+client._actions.file.upload( { _onRequest: uploadFile( "myFile.txt", "/path/to/file" ) } );
+```
+
 ##Specifying Custom Headers
 
 Halon will always provide an `Accept` header value for you, but you can provide your own headers to be sent along with every request (at the client level) and/or at the resource level:

@@ -55,6 +55,10 @@
 	}
 
 	function processResponse( response, fsm ) {
+		// don't bother with all this if the response is an empty body
+		if( _.isEmpty( response ) ) {
+			return response;
+		}
 		// detect whether or not a top-level list of collections has been returned
 		if( !response._links ) {
 			var listKey = Object.keys( response )
@@ -236,6 +240,11 @@
 
 	halonFactory.requestAdapter = function( request ) {
 		return function( link, options ) {
+			var onRequest = function() {};
+			if( options.data && options.data._onRequest ) {
+				onRequest = options.data._onRequest;
+				delete options.data._onRequest;
+			}
 			var json = _.isString( options.data ) ? 
 				options.data : 
 				JSON.stringify( options.data );
@@ -243,7 +252,7 @@
 				options.server + link.href :
 				link.href;
 			return when.promise( function( resolve, reject ) {
-				request( {
+				var req = request( {
 					url: url,
 					method: link.method,
 					headers: options.headers,
@@ -252,9 +261,11 @@
 					if( err ) {
 						reject( err );
 					} else {
-						resolve( JSON.parse( body ) );
+						var json = body !== "{}" ? JSON.parse( body ) : {};
+						resolve( json );
 					}
 				} );
+				onRequest( req );
 			} );
 		};
 	};
