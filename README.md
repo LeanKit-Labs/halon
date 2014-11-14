@@ -118,6 +118,20 @@ The `options` argument can currently contain `data`, `headers` and `server` prop
 }
 ```
 
+####parameters
+
+There are two ways to pass parameters to a URL. The preferred way is to include parameter arguments directly. This will introduce the least amount of coupling to how a particular action is implemented (path variables vs. query parameters vs. request body).
+
+You can also supply a `?` property to the `options` argument to define parameters as well.
+
+```javascript
+// trust that the URL defines these variables either by path or query parameters
+client._actions.board.list( { page: 1, limit: 10 } );
+
+// pass parameters explicitly - could lead to your call failing later if the route changes
+client._actions.board.list( { '?': { page: 1, limit: 10 } } )
+```
+
 ###defaults
 
 If you are planning to new up several halon client instances, you can specify a default adapter by calling `halon.defaultAdapter()` and passing the default adapter function. After doing this, you won't have to specify an `adapter` property on your options argument unless you're overriding the default you specified.
@@ -149,6 +163,21 @@ Halon provides an adapter that takes an existing [`request`](https://github.com/
 var halon = require( "halon" );
 var request = require( "request" );
 var client = halon( { root: "http://yourserver/api", adapter: halon.requestAdapter( request ) } );
+```
+
+__Form submission & Uploads__
+`request` supports uploads and multipart form submission via extension methods `form` and `append`. You can attach an `_onRequest` property in your call with a callback that will be invoked with the `request` object allowing you to call these extension methods and handle the form submission yourself.
+
+```javascript
+// here's an example showing how you could handle file uploads
+function uploadFile( fileName, filePath )
+	return function( req ) {
+		req.form().append( fileName, fs.createReadStream( filePath ) );
+	};
+}
+
+// assuming you have a resource named "file" and a POST action "upload"
+client._actions.file.upload( { _onRequest: uploadFile( "myFile.txt", "/path/to/file" ) } );
 ```
 
 ##Specifying Custom Headers

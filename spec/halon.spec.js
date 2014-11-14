@@ -1,5 +1,6 @@
 var halon = require( "../src/halon.js" );
 var adapterFactory = require( "./adapterStub.js" );
+var requestFactory = require( "./requestStub.js" );
 require( "mocha" );
 var should = require( "should" ); //jshint ignore:line
 var expectedOptionsResponse = require( "./mockResponses/options.json" );
@@ -491,6 +492,113 @@ describe( "halon", function() {
 						}
 					} );
 				} );
+			} );
+		} );
+
+		describe( "when calling an action that provides parameter definitions", function() {
+			var hc;
+			var results = [];
+			var list;
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.package.list( { 
+						project: "one",
+						build: 1,
+						version: "0.1.0"
+					} ).then( function( result ) {
+						list = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should pass expected arguments to the adapter", function() {
+				results[ 2 ][ 0 ].should.eql( {
+					href: "/analytics/api/nonstop/package?project=one&build=1&version=0.1.0",
+					method: "GET",
+					parameters: {
+						project: { choice: [ "one", "two" ] },
+		                build: { choice: [ 1, 2, 3, 4, 5 ] },
+		                version: { choice: [ "0.1.0", "0.1.2", "0.1.4" ] }
+					}
+				} );
+				results[ 2 ][ 1 ].should.eql( { data: { project: "one", build: 1, version: "0.1.0" }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
+			} );
+			it( "should return list of packages", function() {
+				list.packages.length.should.equal( 0 );
+			} );
+		} );
+
+		describe( "when calling an action with user supplied parameters", function() {
+			var hc;
+			var results = [];
+			var list;
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.package.project( {
+						"?": { 
+							owner: "me",
+							build: 1,
+							version: "0.1.0"
+						}
+					} ).then( function( result ) {
+						list = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should pass expected arguments to the adapter", function() {
+				results[ 2 ][ 0 ].should.eql( {
+					href: "/analytics/api/nonstop/project?owner=me&build=1&version=0.1.0",
+					method: "GET"
+				} );
+				results[ 2 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
+			} );
+			it( "should return list of packages", function() {
+				list.projects.length.should.equal( 0 );
+			} );
+		} );
+		
+		describe( "when extending request object (Node JS only)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			before( function( done ) {
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.package.upload( {
+						_onRequest: function( req ) {
+
+							req.form().append( "myFile.txt", { pretendFileStream: true } );
+						}
+					} ).then( function( result ) {
+						resp = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should return an empty response", function() {
+				resp.should.eql( {} );
+			} );
+
+			it( "should call form and append on request object", function() {
+				fauxRequest.state.appended[ 0 ].should.eql( [ "myFile.txt", { pretendFileStream: true } ] );
 			} );
 		} );
 	} );

@@ -167,6 +167,23 @@
         "_autohost:metrics": {
             "href": "/analytics/api/_autohost/metrics",
             "method": "GET"
+        },
+        "package:list": {
+            "href": "/analytics/api/nonstop/package",
+            "method": "GET",
+            "parameters": {
+                "project": { "choice": [ "one", "two" ] },
+                "build": { "choice": [ 1, 2, 3, 4, 5 ] },
+                "version": { "choice": [ "0.1.0", "0.1.2", "0.1.4" ] }
+            }
+        },
+        "package:project": {
+            "href": "/analytics/api/nonstop/project",
+            "method": "GET"
+        },
+        "package:upload": {
+            "href": "/analytics/api/nonstop/upload",
+            "method": "POST"
         }
     },
     "_mediaTypes": [

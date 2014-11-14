@@ -8,7 +8,10 @@ var mocks = {
 	"/analytics/api/board/101/cardtype": require( "./mockResponses/board101cardtypes.json" ),
 	"/analytics/api/user/1": require( "./mockResponses/user1.json" ),
 	"/analytics/api/board/101/lane": require( "./mockResponses/board101lane.json" ),
-	"/analytics/api/board/101/lane/307": {}
+	"/analytics/api/board/101/lane/307": {},
+	"/analytics/api/nonstop/package?project=one&build=1&version=0.1.0": { "packages": [] },
+	"/analytics/api/nonstop/project?owner=me&build=1&version=0.1.0": { "projects": [] },
+	"http://localhost:8088/analytics/api/nonstop/upload": {}
 };
 var when = require( "when" );
 var adapter = function( resultsArray ) {
