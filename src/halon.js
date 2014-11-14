@@ -182,7 +182,8 @@
 			return when.all( args );
 		};
 		options = _.defaults( options, defaults );
-		options.server = /http(s)?[:][\/]{2}[^\/]*/.exec( options.root )[ 0 ];
+		var server = /http(s)?[:][\/]{2}[^\/]*/.exec( options.root );
+		options.server = server ? server[ 0 ] : undefined;
 		options.client = client;
 
 		var fsm = client.fsm = new HalonClientFsm( options );

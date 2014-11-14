@@ -1,5 +1,6 @@
 var mocks = {
 	"http://localhost:8088/analytics/api": require( "./mockResponses/options.json" ),
+	"/analytics/api": require( "./mockResponses/options.json" ),
 	"http://localhost:8088/analytics/altapi": require( "./mockResponses/altOptions.json" ),
 	"/analytics/api/board/101": require( "./mockResponses/board101.json" ),
 	"/analytics/api/board/101/card": require( "./mockResponses/board101cards.json" ),

@@ -39,6 +39,34 @@ describe( "halon", function() {
 				hc._links.should.eql( expectedOptionsResponse._links );
 			} );
 		} );
+		describe( "with local root", function() {
+			var hc;
+			var results = [];
+			before( function( done ) {
+				hc = halon( {
+					root: "/analytics/api",
+					knownOptions: {
+						board: [ "self", "users", "cardTypes" ]
+					},
+					adapter: adapterFactory( results ),
+					version: 2
+				} );
+				hc.onReady( function( hc ) {
+					done();
+				} );
+			} );
+			it( "should make an OPTIONS request", function() {
+				results.length.should.equal( 2 );
+				results[ 1 ].should.eql( expectedOptionsResponse );
+			} );
+			it( "should contain the proper headers", function() {
+				results[ 0 ][ 1 ].headers.Accept.should.equal( "application/hal.v2+json" );
+			} );
+			it( "should create expected options structure on halon client instance", function() {
+				hc.should.have.property( "_actions" );
+				hc._links.should.eql( expectedOptionsResponse._links );
+			} );
+		} );
 		describe( "with a startup delay", function() {
 			var hc;
 			var results = [];
