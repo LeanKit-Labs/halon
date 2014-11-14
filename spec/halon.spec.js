@@ -562,7 +562,7 @@ describe( "halon", function() {
 					href: "/analytics/api/nonstop/project?owner=me&build=1&version=0.1.0",
 					method: "GET"
 				} );
-				results[ 2 ][ 1 ].should.eql( { data: { "?": { owner: "me", build: 1, version: "0.1.0" } }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
+				results[ 2 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should return list of packages", function() {
 				list.projects.length.should.equal( 0 );
