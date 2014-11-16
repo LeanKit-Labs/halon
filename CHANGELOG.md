@@ -1,6 +1,7 @@
 ## 0.0.*
 
 ### 0.0.2
+ * Add `onRejected` handler for managing connectivity issues
  * Add support for custom headers at client and request level
  * Add support for query parameters
  * Add support for request

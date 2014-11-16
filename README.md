@@ -48,7 +48,11 @@ Halon only needs your root API. As it initializes, it will make an `OPTIONS` req
 
 If you already know ahead of time about any resources that the root `OPTIONS` response will include, you can provide them via the `knownOptions` property on the options passed to halon. This sets up the methods ahead of time, and invoking them results in a request being queued. Once the `OPTIONS` response has been processed, halon internally moves into a `ready` state, and any queued requests will be sent to the server in the order they were queued. This behavior can be helpful in avoiding often-unwieldy "temporal dependency" code, where calls against halon's API would have to be done inside an `onReady` callback.
 
-However, halon does also provide an `onReady` method that notifies you when the `OPTIONS` response has been processed and the client is in a `ready` state:
+### Connectivity
+Halon provides two callbacks that signal the status of the underlying adapter. 
+
+#### onReady( callback )
+Notifies you when the `OPTIONS` response has been processed and the client is in a `ready` state:
 
 ```javascript
 var client = halon( {
@@ -60,6 +64,25 @@ client.onReady( function( client ) {
 	// are know available to invoke under client._actions.
 	// The halon client instance is passed as an argument
 	// to this callback for convenience.
+} );
+```
+
+#### onRejected( callback, [persistant] )
+Notifies you when the `OPTIONS` call has failed. Pass true to the `persistant` argument if you'd like your callback to be invoked for _every_ failed connection attempt.
+
+The callback's `listener` argument can be used to turn off a persistant `onRejected` callback.
+
+> Recommendation - Use this callback to plug in a connection management strategy.
+
+```javascript
+var client = halon( {
+	root: "http://server/api",
+	adapter: halon.jQueryAdapter($)
+} );
+client.onReady( ... )
+client.onRejected( function( client, err, listener ) {
+	// call client.start() to attempt the connection again
+	// call listener.off() when you no longer wish to receive callbacks	
 } );
 ```
 
