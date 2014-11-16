@@ -67,10 +67,10 @@ client.onReady( function( client ) {
 } );
 ```
 
-#### onRejected( callback, [persistant] )
-Notifies you when the `OPTIONS` call has failed. Pass true to the `persistant` argument if you'd like your callback to be invoked for _every_ failed connection attempt.
+#### onRejected( callback, [persistent] )
+Notifies you when the `OPTIONS` call has failed. Pass true to the `persistent` argument if you'd like your callback to be invoked for _every_ failed connection attempt.
 
-The callback's `listener` argument can be used to turn off a persistant `onRejected` callback.
+The callback's `listener` argument can be used to turn off a persistent `onRejected` callback.
 
 > Recommendation - Use this callback to plug in a connection management strategy.
 
