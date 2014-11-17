@@ -269,7 +269,7 @@
 				options.server + link.href :
 				link.href;
 			return when.promise( function( resolve, reject ) {
-				var req = request( {
+				onRequest( request( {
 					url: url,
 					method: link.method,
 					headers: options.headers,
@@ -281,8 +281,7 @@
 						var json = body !== "{}" ? JSON.parse( body ) : {};
 						resolve( json );
 					}
-				} );
-				onRequest( req );
+				} ) );
 			} );
 		};
 	};
