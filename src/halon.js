@@ -131,9 +131,12 @@
 				_onEnter: function() {
 					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: this.getHeaders(), server: this.server } )
 						.then(
-							this.handle.bind( this, "root.loaded" ), function( err ) {
+							this.handle.bind( this, "root.loaded" ), 
+							function( err ) {
 								console.warn( err );
-							}
+								this.connectionError = err;
+								this.transition( "connection.failed" );
+							}.bind( this )
 					);
 				},
 				"root.loaded": function( options ) {
@@ -166,6 +169,12 @@
 						}.bind( this ) )
 						.then( success, err );
 				}
+			},
+			"connection.failed": {
+				"start": "initializing",
+				"invoke.resource": function( resource, rel, data, headers, success, err ) {
+					err( this.connectionError );
+				}
 			}
 		},
 
@@ -192,24 +201,32 @@
 		options.client = client;
 
 		var fsm = client.fsm = new HalonClientFsm( options );
-
-		client.onReady = function( cb ) {
-			if ( fsm.state === "ready" ) {
+		var listenFor = function( state, cb, persist ) {
+			if( fsm.state === state ) {
 				cb( client );
-			} else {
-				var listener;
-				listener = fsm.on( "transition", function( data ) {
-					if ( data.toState === "ready" ) {
-						listener.off();
-						cb( client );
-					}
-				}.bind( this ) );
 			}
+			var listener;
+			listener = fsm.on( "transition", function( data ) {
+				if( data.toState === state ) {
+					if( !persist ) {
+						listener.off();
+					}
+					cb( client, fsm.connectionError, listener );
+				}
+			} )
+		};
+		client.onReady = function( cb ) {
+			listenFor( "ready", cb );
 			return client;
 		};
+		client.onRejected = function( cb, persist ) {
+			listenFor( "connection.failed", cb, persist );
+			return client;
+		}
 
 		client.start = function() {
 			fsm.handle( "start" );
+			return client;
 		};
 
 		if ( !options.doNotStart ) {
@@ -252,7 +269,7 @@
 				options.server + link.href :
 				link.href;
 			return when.promise( function( resolve, reject ) {
-				var req = request( {
+				onRequest( request( {
 					url: url,
 					method: link.method,
 					headers: options.headers,
@@ -264,8 +281,7 @@
 						var json = body !== "{}" ? JSON.parse( body ) : {};
 						resolve( json );
 					}
-				} );
-				onRequest( req );
+				} ) );
 			} );
 		};
 	};

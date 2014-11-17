@@ -9,6 +9,7 @@ var expectedCardResponse = require( "./mockResponses/board101cards.json" );
 var expectedCardTypeResponse = require( "./mockResponses/board101cardtypes.json" );
 var expectedUserResponse = require( "./mockResponses/user1.json" );
 var _ = require( "lodash" );
+var when = require( "when" );
 
 describe( "halon", function() {
 	describe( "when initializing a halon client", function() {
@@ -252,6 +253,46 @@ describe( "halon", function() {
 						"If-Match": "8675309"
 					} );
 				} );
+			} );
+		} );
+		describe( "when host is unavailable", function() {
+			var hc;
+			var actionResult;
+			var results = [];
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {
+						board: [ "self", "users", "cardTypes" ]
+					},
+					adapter: function() { 
+						return when.reject( new Error( "Server can't talk right now, hazza sad :(" ) ); 
+					},
+					version: 2
+				} );
+
+				hc.onRejected( function( hc, err, handle ) {
+					results.push( err );
+					if( results.length > 4 ) {
+						handle.off();
+						hc._actions.board.self()
+							.then( null, function( err ) {
+								actionResult = err;
+								done();
+							} );
+					} else {
+						hc.start();
+					}					
+				}, true ).start();
+			} );
+			it( "should invoke onReject callback with connection error", function() {
+				results[ 0 ].toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
+			} );
+			it( "should reject API calls", function() {
+				actionResult.toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
+			} );
+			it( "should attempt connection again if 'start' is called", function() {
+				results.length.should.equal( 5 );
 			} );
 		} );
 	} );
