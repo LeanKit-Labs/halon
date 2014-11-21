@@ -611,7 +611,7 @@ describe( "halon", function() {
 			} );
 		} );
 		
-		describe( "when extending request object (Node JS only)", function() {
+		describe( "when sending formData (request adapter only)", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
@@ -624,9 +624,8 @@ describe( "halon", function() {
 				} );
 				hc.onReady( function( hc ) {
 					hc._actions.package.upload( {
-						_onRequest: function( req ) {
-
-							req.form().append( "myFile.txt", { pretendFileStream: true } );
+						formData: {
+							"myFile.txt": { pretendFileStream: true }
 						}
 					} ).then( function( result ) {
 						resp = result;
@@ -638,8 +637,13 @@ describe( "halon", function() {
 				resp.should.eql( {} );
 			} );
 
-			it( "should call form and append on request object", function() {
-				fauxRequest.state.appended[ 0 ].should.eql( [ "myFile.txt", { pretendFileStream: true } ] );
+			it( "should create options with formData property", function() {
+				results[ 2 ][ 1 ].should.eql( {
+					method: "POST",
+					url: "http://localhost:8088/analytics/api/nonstop/upload",
+					headers: { Accept: "application/hal.v3+json" },
+					formData: { "myFile.txt": { pretendFileStream: true } }
+				} );
 			} );
 		} );
 	} );

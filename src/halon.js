@@ -257,10 +257,10 @@
 
 	halonFactory.requestAdapter = function( request ) {
 		return function( link, options ) {
-			var onRequest = function() {};
-			if( options.data && options.data._onRequest ) {
-				onRequest = options.data._onRequest;
-				delete options.data._onRequest;
+			var formData;
+			if( options.data && options.data.formData ) {
+				formData = options.data.formData;
+				delete options.data.formData;
 			}
 			var json = _.isString( options.data ) ? 
 				options.data : 
@@ -268,20 +268,25 @@
 			var url = link.href.indexOf( options.server ) < 0 ?
 				options.server + link.href :
 				link.href;
+			var requestOptions = {
+				url: url,
+				method: link.method,
+				headers: options.headers
+			};
+			if( formData ) {
+				requestOptions.formData = formData;
+			} else {
+				requestOptions.body = json;
+			}
 			return when.promise( function( resolve, reject ) {
-				onRequest( request( {
-					url: url,
-					method: link.method,
-					headers: options.headers,
-					body: json,
-				}, function( err, resp, body ) {
+				request( requestOptions, function( err, resp, body ) {
 					if( err ) {
 						reject( err );
 					} else {
 						var json = body !== "{}" ? JSON.parse( body ) : {};
 						resolve( json );
 					}
-				} ) );
+				} );	
 			} );
 		};
 	};
