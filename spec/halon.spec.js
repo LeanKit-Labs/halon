@@ -1,16 +1,4 @@
-var halon = require( "../src/halon.js" );
-var adapterFactory = require( "./adapterStub.js" );
-var requestFactory = require( "./requestStub.js" );
-require( "mocha" );
-var should = require( "should" ); //jshint ignore:line
-var expectedOptionsResponse = require( "./mockResponses/options.json" );
-var expectedBoardResponse = require( "./mockResponses/board101.json" );
-var expectedCardResponse = require( "./mockResponses/board101cards.json" );
-var expectedCardTypeResponse = require( "./mockResponses/board101cardtypes.json" );
-var expectedUserResponse = require( "./mockResponses/user1.json" );
-var _ = require( "lodash" );
-var when = require( "when" );
-
+/*global halon, adapterFactory, expectedOptionsResponse, when, _, requestFactory, expectedOptionsResponse, expectedBoardResponse, expectedCardResponse, expectedCardTypeResponse, expectedUserResponse  */
 describe( "halon", function() {
 	describe( "when initializing a halon client", function() {
 		describe( "with no start delay", function() {
@@ -265,15 +253,15 @@ describe( "halon", function() {
 					knownOptions: {
 						board: [ "self", "users", "cardTypes" ]
 					},
-					adapter: function() { 
-						return when.reject( new Error( "Server can't talk right now, hazza sad :(" ) ); 
+					adapter: function() {
+						return when.reject( new Error( "Server can't talk right now, hazza sad :(" ) );
 					},
 					version: 2
 				} );
 
 				hc.onRejected( function( hc, err, handle ) {
 					results.push( err );
-					if( results.length > 4 ) {
+					if ( results.length > 4 ) {
 						handle.off();
 						hc._actions.board.self()
 							.then( null, function( err ) {
@@ -282,7 +270,7 @@ describe( "halon", function() {
 							} );
 					} else {
 						hc.start();
-					}					
+					}
 				}, true ).start();
 			} );
 			it( "should invoke onReject callback with connection error", function() {
@@ -548,7 +536,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.package.list( { 
+					hc._actions.package.list( {
 						project: "one",
 						build: 1,
 						version: "0.1.0"
@@ -564,8 +552,8 @@ describe( "halon", function() {
 					method: "GET",
 					parameters: {
 						project: { choice: [ "one", "two" ] },
-		                build: { choice: [ 1, 2, 3, 4, 5 ] },
-		                version: { choice: [ "0.1.0", "0.1.2", "0.1.4" ] }
+						build: { choice: [ 1, 2, 3, 4, 5 ] },
+						version: { choice: [ "0.1.0", "0.1.2", "0.1.4" ] }
 					}
 				} );
 				results[ 2 ][ 1 ].should.eql( { data: { project: "one", build: 1, version: "0.1.0" }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
@@ -588,7 +576,7 @@ describe( "halon", function() {
 				} );
 				hc.onReady( function( hc ) {
 					hc._actions.package.project( {
-						"?": { 
+						"?": {
 							owner: "me",
 							build: 1,
 							version: "0.1.0"
@@ -610,7 +598,7 @@ describe( "halon", function() {
 				list.projects.length.should.equal( 0 );
 			} );
 		} );
-		
+
 		describe( "when sending formData (request adapter only)", function() {
 			var results = [];
 			var resp;

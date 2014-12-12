@@ -43,6 +43,7 @@ var mocha = require( "gulp-spawn-mocha" );
 gulp.task( "mocha", function() {
 	return gulp.src( [ "spec/**/*.spec.js" ], { read: false } )
 		.pipe( mocha( {
+			require: [ "spec/helpers/node-setup.js" ],
 			reporter: "spec",
 			colors: true,
 			inlineDiffs: true,
