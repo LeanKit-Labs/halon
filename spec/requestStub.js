@@ -1,3 +1,4 @@
+var _ = require( "lodash" );
 module.exports = function( adapterStub ) {
 	var junk = [];
 	var req = {
@@ -6,7 +7,7 @@ module.exports = function( adapterStub ) {
 		request.state = req;
 		adapterStub( { href: opts.url }, opts )
 			.then( function( res ) {
-				cb( null, null, JSON.stringify( res ) );
+				cb( null, null, _.isString( res ) ? res : JSON.stringify( res ) );
 			} );
 		return req;
 	};

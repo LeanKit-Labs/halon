@@ -23,17 +23,17 @@
 	function expandLink( action, data ) {
 		var href = URI.expand( action.href, data ).href();
 		var query = data[ "?" ];
-		if( query ) {
-			href = href + "?" + _.map( query, function( val, param ) { 
-				return param + "=" + URI.encode( val ); 
-			} ).join( "&" );
+		if ( query ) {
+			href = href + "?" + _.map( query, function( val, param ) {
+					return param + "=" + URI.encode( val );
+				} ).join( "&" );
 			delete data[ "?" ];
-		} else if( action.parameters ) {
+		} else if ( action.parameters ) {
 			href = href + "?" + _.compact( _.map( action.parameters, function( param, key ) {
-				if( data[ key ] ) {
-					return key + "=" + URI.encode( data[ key ] );
-				}
-			} ) ).join( "&" );
+					if ( data[ key ] ) {
+						return key + "=" + URI.encode( data[ key ] );
+					}
+				} ) ).join( "&" );
 		}
 		return href;
 	}
@@ -56,15 +56,15 @@
 
 	function processResponse( response, fsm ) {
 		// don't bother with all this if the response is an empty body
-		if( _.isEmpty( response ) ) {
+		if ( _.isEmpty( response ) || _.isString( response ) ) {
 			return response;
 		}
 		// detect whether or not a top-level list of collections has been returned
-		if( !response._links ) {
+		if ( !response._links ) {
 			var listKey = Object.keys( response )
-				.filter( function( x ) { 
+				.filter( function( x ) {
 					return x !== "_origin";
-				} )[0];
+				} )[ 0 ];
 			var base = { _origin: response._origin };
 			base[ listKey ] = _.map( response[ listKey ], function( item ) {
 				return processEmbedded( processLinks( item, fsm ) );
@@ -131,8 +131,7 @@
 				_onEnter: function() {
 					this.adapter( { href: this.root, method: "OPTIONS" }, { headers: this.getHeaders(), server: this.server } )
 						.then(
-							this.handle.bind( this, "root.loaded" ), 
-							function( err ) {
+							this.handle.bind( this, "root.loaded" ), function( err ) {
 								console.warn( err );
 								this.connectionError = err;
 								this.transition( "connection.failed" );
@@ -153,7 +152,7 @@
 					if ( !resourceDef ) {
 						throw new Error( "No link definition for rel '" + rel + "'" );
 					}
-					if ( resourceDef.templated || resourceDef.parameters || data[ '?' ] ) {
+					if ( resourceDef.templated || resourceDef.parameters || data[ "?" ] ) {
 						resourceDef = _.extend( {}, resourceDef, { href: expandLink( resourceDef, data ) } );
 					}
 					this.adapter( resourceDef, { data: data, headers: this.getHeaders( headers ), server: this.server } )
@@ -202,18 +201,18 @@
 
 		var fsm = client.fsm = new HalonClientFsm( options );
 		var listenFor = function( state, cb, persist ) {
-			if( fsm.state === state ) {
+			if ( fsm.state === state ) {
 				cb( client );
 			}
 			var listener;
 			listener = fsm.on( "transition", function( data ) {
-				if( data.toState === state ) {
-					if( !persist ) {
+				if ( data.toState === state ) {
+					if ( !persist ) {
 						listener.off();
 					}
 					cb( client, fsm.connectionError, listener );
 				}
-			} )
+			} );
 		};
 		client.onReady = function( cb ) {
 			listenFor( "ready", cb );
@@ -222,7 +221,7 @@
 		client.onRejected = function( cb, persist ) {
 			listenFor( "connection.failed", cb, persist );
 			return client;
-		}
+		};
 
 		client.start = function() {
 			fsm.handle( "start" );
@@ -258,13 +257,13 @@
 	halonFactory.requestAdapter = function( request ) {
 		return function( link, options ) {
 			var formData;
-			if( options.data && options.data.formData ) {
+			if ( options.data && options.data.formData ) {
 				formData = options.data.formData;
 				delete options.data.formData;
 			}
-			var json = _.isString( options.data ) ? 
-				options.data : 
-				JSON.stringify( options.data );
+			var json = _.isString( options.data ) ?
+				JSON.parse( options.data ) :
+				options.data;
 			var url = link.href.indexOf( options.server ) < 0 ?
 				options.server + link.href :
 				link.href;
@@ -273,20 +272,22 @@
 				method: link.method,
 				headers: options.headers
 			};
-			if( formData ) {
+			if ( formData ) {
 				requestOptions.formData = formData;
 			} else {
-				requestOptions.body = json;
+				requestOptions.json = json;
 			}
 			return when.promise( function( resolve, reject ) {
 				request( requestOptions, function( err, resp, body ) {
-					if( err ) {
+					if ( err ) {
 						reject( err );
-					} else {
+					} else if ( body[ 0 ] === "{" ) {
 						var json = body !== "{}" ? JSON.parse( body ) : {};
 						resolve( json );
+					} else {
+						resolve( body );
 					}
-				} );	
+				} );
 			} );
 		};
 	};
