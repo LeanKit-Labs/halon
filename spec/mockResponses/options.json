@@ -21,7 +21,7 @@
         "board:cards": {
             "href": "/analytics/api/board/{id}/card",
             "method": "GET",
-            "templated": true    
+            "templated": true
         },
         "board:cardTypes": {
             "href": "/analytics/api/board/{id}/cardtype",
@@ -183,6 +183,10 @@
         },
         "package:upload": {
             "href": "/analytics/api/nonstop/upload",
+            "method": "POST"
+        },
+        "elevated:gimme": {
+            "href": "/analytics/api/elevated/gimme",
             "method": "POST"
         }
     },

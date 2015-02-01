@@ -634,5 +634,44 @@ describe( "halon", function() {
 				} );
 			} );
 		} );
+
+		describe( "when processing non-JSON response (error messages)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			before( function( done ) {
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.elevated.gimme( {
+						this: "is a test",
+						for: "a json body"
+					} ).then( function( result ) {
+						resp = result;
+						done();
+					} );
+				} );
+			} );
+
+			it( "should return an empty response", function() {
+				resp.should.eql( "User lacks sufficient permissions" );
+			} );
+
+			it( "should create options with formData property", function() {
+				results[ 2 ][ 1 ].should.eql( {
+					method: "POST",
+					url: "http://localhost:8088/analytics/api/elevated/gimme",
+					headers: { Accept: "application/hal.v3+json" },
+					json: {
+						this: "is a test",
+						for: "a json body"
+					}
+				} );
+			} );
+		} );
 	} );
 } );
