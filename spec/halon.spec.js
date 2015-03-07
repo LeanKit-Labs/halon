@@ -657,15 +657,18 @@ describe( "halon", function() {
 				} );
 			} );
 
-			it( "should return an empty response", function() {
+			it( "should return plain error message", function() {
 				resp.should.eql( "User lacks sufficient permissions" );
 			} );
 
-			it( "should create options with formData property", function() {
+			it( "should create options with json content type", function() {
 				results[ 2 ][ 1 ].should.eql( {
 					method: "POST",
 					url: "http://localhost:8088/analytics/api/elevated/gimme",
-					headers: { Accept: "application/hal.v3+json" },
+					headers: {
+						Accept: "application/hal.v3+json",
+						"Content-Type": "application/json"
+					},
 					json: {
 						this: "is a test",
 						for: "a json body"

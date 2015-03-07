@@ -276,6 +276,7 @@
 				requestOptions.formData = formData;
 			} else {
 				requestOptions.json = json;
+				requestOptions.headers[ "Content-Type" ] = "application/json";
 			}
 			return when.promise( function( resolve, reject ) {
 				request( requestOptions, function( err, resp, body ) {
