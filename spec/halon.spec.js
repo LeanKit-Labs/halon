@@ -83,10 +83,18 @@ describe( "halon", function() {
 				} );
 			} );
 			it( "should allow pre-defined resource methods to fire before options response returns", function() {
-				events[ 0 ].queuedArgs.args[ 0 ].should.equal( "invoke.resource" );
+				events[ 0 ].queuedArgs.args[ 0 ].should.eql( {
+					delegated: false,
+					inputType: "invoke.resource",
+					ticket: undefined
+				} );
 				events[ 0 ].queuedArgs.args[ 2 ].should.equal( "board:self" );
 				events[ 0 ].queuedArgs.args[ 3 ].should.eql( { id: 101 } );
-				events[ 1 ].queuedArgs.args[ 0 ].should.equal( "invoke.resource" );
+				events[ 1 ].queuedArgs.args[ 0 ].should.eql( {
+					delegated: false,
+					inputType: "invoke.resource",
+					ticket: undefined
+				} );
 				events[ 1 ].queuedArgs.args[ 2 ].should.equal( "user:self" );
 				events[ 1 ].queuedArgs.args[ 3 ].should.eql( { id: 1 } );
 			} );

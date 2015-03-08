@@ -38,22 +38,20 @@
   },
   "dependencies": {
     "URIjs": "^1.14.1",
-    "lodash": "^2.4.1",
-    "machina": "^0.4.0-1",
-    "when": "^3.5.2"
+    "lodash": "3.x",
+    "machina": "^1.0.0-1",
+    "when": "3.x"
   },
   "devDependencies": {
-    "gulp": "^3.8.8",
+    "gulp": "^3.8.11",
     "gulp-header": "^1.0.5",
     "gulp-hint-not": "0.0.3",
     "gulp-rename": "^1.2.0",
-    "gulp-sourcemaps": "^1.1.1",
-    "gulp-spawn-mocha": "^0.4.1",
-    "gulp-uglify": "^1.0.1",
-    "istanbul": "^0.3.2",
-    "lodash": "^2.4.1",
-    "machina": "^0.4.0-1",
-    "mocha": "^1.21.4",
+    "gulp-sourcemaps": "^1.5.0",
+    "gulp-spawn-mocha": "^2.0.1",
+    "gulp-uglify": "^1.1.0",
+    "istanbul": "^0.3.7",
+    "mocha": "^2.2.0",
     "should": "^4.0.4"
   },
   "engines": {
