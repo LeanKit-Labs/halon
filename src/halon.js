@@ -278,7 +278,7 @@
 				request( requestOptions, function( err, resp, body ) {
 					if ( err ) {
 						reject( err );
-					} else if ( body[ 0 ] === "{" ) {
+					} else if ( body && body[ 0 ] === "{" ) {
 						var isJson = body && body !== "" && body !== "{}";
 						var json = isJson ? JSON.parse( body ) : {};
 						resolve( json );
