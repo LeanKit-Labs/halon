@@ -38,6 +38,11 @@
             "method": "GET",
             "templated": true
         },
+        "board:edit": {
+            "href": "/analytics/api/board/{id}",
+            "method": "PATCH",
+            "templated": true
+        },
         "cardType:self": {
             "href": "/analytics/api/board/{id}/cardType/{cardTypeId}",
             "method": "GET",

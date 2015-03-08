@@ -4,6 +4,7 @@
  * Request adapter should include the correct content-type header
  * Don't throw errors on empty responses (204s for example are valid, empty body responses)
  * Request adapter should not send empty JSON body
+ * Add support for submitting arrays as the body of an action
 
 ### 0.0.2
  * Add `onRejected` handler for managing connectivity issues
