@@ -188,6 +188,10 @@
         "elevated:gimme": {
             "href": "/analytics/api/elevated/gimme",
             "method": "POST"
+        },
+        "this:delete": {
+            "href": "http://localhost:8088/analytics/api/this/204",
+            "method": "DELETE"
         }
     },
     "_mediaTypes": [

@@ -157,14 +157,7 @@
 					}
 					this.adapter( resourceDef, { data: data, headers: this.getHeaders( headers ), server: this.server } )
 						.then( function( response ) {
-							return when.promise( function( resolve, reject ) {
-								if ( !response ) {
-									var err = new Error( "Empty response for " + rel );
-									err.resourceDef = resourceDef;
-									reject( err );
-								}
-								resolve( processResponse( response, this ) );
-							}.bind( this ) );
+							return processResponse( response, this );
 						}.bind( this ) )
 						.then( success, err );
 				}
@@ -274,7 +267,7 @@
 			};
 			if ( formData ) {
 				requestOptions.formData = formData;
-			} else {
+			} else if( json && !_.isEmpty( json ) ) {
 				requestOptions.json = json;
 				requestOptions.headers[ "Content-Type" ] = "application/json";
 			}
@@ -283,7 +276,8 @@
 					if ( err ) {
 						reject( err );
 					} else if ( body[ 0 ] === "{" ) {
-						var json = body !== "{}" ? JSON.parse( body ) : {};
+						var isJson = body && body !== "" && body !== "{}";
+						var json = isJson ? JSON.parse( body ) : {};
 						resolve( json );
 					} else {
 						resolve( body );

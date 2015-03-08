@@ -676,5 +676,39 @@ describe( "halon", function() {
 				} );
 			} );
 		} );
+		describe( "when processing empty responses (204)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			before( function( done ) {
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.this.delete()
+						.then( function( result ) {
+							resp = result;
+							done();
+						} );
+				} );
+			} );
+
+			it( "should return an empty response", function() {
+				resp.should.eql( "" );
+			} );
+
+			it( "should create options with json content type", function() {
+				results[ 2 ][ 1 ].should.eql( {
+					method: "DELETE",
+					url: "http://localhost:8088/analytics/api/this/204",
+					headers: {
+						Accept: "application/hal.v3+json"
+					}
+				} );
+			} );
+		} );
 	} );
 } );

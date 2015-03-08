@@ -7,7 +7,11 @@ module.exports = function( adapterStub ) {
 		request.state = req;
 		adapterStub( { href: opts.url }, opts )
 			.then( function( res ) {
-				cb( null, null, _.isString( res ) ? res : JSON.stringify( res ) );
+				var body = "";
+				if( res ) {
+					body = _.isString( res ) ? res : JSON.stringify( res );
+				}
+				cb( null, null, body );
 			} );
 		return req;
 	};
