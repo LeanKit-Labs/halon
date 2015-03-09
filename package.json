@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "chai": "^2.1.1",
+    "chai-as-promised": "^4.3.0",
     "gulp": "^3.8.11",
     "gulp-header": "^1.0.5",
     "gulp-hint-not": "0.0.3",
@@ -54,6 +55,7 @@
     "istanbul": "^0.3.7",
     "mocha": "^2.2.0",
     "sinon": "^1.13.0",
+    "sinon-as-promised": "^2.0.3",
     "sinon-chai": "^2.7.0"
   },
   "engines": {

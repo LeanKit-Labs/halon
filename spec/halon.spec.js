@@ -768,5 +768,82 @@ describe( "halon", function() {
 				} );
 			} );
 		} );
+	describe( "when using adapters", function() {
+		describe( "when setting a default adapter", function() {
+			describe( "with no adapter passed into the factory", function() {
+				var fauxAdapter;
+				before( function( done ) {
+					fauxAdapter = sinon.stub().resolves( {} );
+					halon.defaultAdapter( fauxAdapter );
+
+					var hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {},
+						version: 3
+					} );
+
+					hc.onReady( function() {
+						done();
+					} );
+				} );
+
+				it( "should use the default adapter", function() {
+					fauxAdapter.should.be.calledOnce;
+				} );
+			} );
+			describe( "with an adapter passed into the factory", function() {
+				var fauxAdapter, overrideAdapter;
+				before( function( done ) {
+					fauxAdapter = sinon.stub().resolves( {} );
+					overrideAdapter = sinon.stub().resolves( {} );
+
+					halon.defaultAdapter( fauxAdapter );
+
+					var hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {},
+						adapter: overrideAdapter,
+						version: 3
+					} );
+
+					hc.onReady( function() {
+						done();
+					} );
+				} );
+
+				it( "should use the adapter passed into options", function() {
+					overrideAdapter.should.be.calledOnce;
+					fauxAdapter.should.not.be.called;
+				} );
+			} );
+		} );
+		describe( "when using the jQuery adapter", function() {
+			var faux$;
+			before( function( done ) {
+				faux$ = {
+					ajax: sinon.stub().resolves( {} )
+				};
+
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					version: 3,
+					adapter: halon.jQueryAdapter( faux$ )
+				} );
+
+				hc.onReady( function() {
+					done();
+				} );
+			} );
+
+			it( "should prepare the options for $.ajax", function() {
+				faux$.ajax.should.be.calledOnce.and.calledWith( {
+					url: "http://localhost:8088/analytics/api",
+					type: "OPTIONS",
+					headers: { Accept: "application/hal.v3+json" },
+					dataType: "json",
+					data: undefined
+				} );
+			} );
+		} );
 	} );
 } );
