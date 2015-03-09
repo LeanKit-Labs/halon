@@ -91,7 +91,19 @@
 		"after",
 		"afterEach",
 		"it",
-		"require"
+		"require",
+		"halon",
+		"when",
+		"_",
+		"sinon",
+		"should",
+		"adapterFactory",
+		"requestFactory",
+		"expectedOptionsResponse",
+		"expectedBoardResponse",
+		"expectedCardResponse",
+		"expectedCardTypeResponse",
+		"expectedUserResponse"
 	],
 
 	// LEGACY

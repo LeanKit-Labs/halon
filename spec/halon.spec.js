@@ -1,4 +1,3 @@
-/*global halon, adapterFactory, expectedOptionsResponse, when, _, requestFactory, expectedOptionsResponse, expectedBoardResponse, expectedCardResponse, expectedCardTypeResponse, expectedUserResponse  */
 describe( "halon", function() {
 	describe( "when initializing a halon client", function() {
 		describe( "with no start delay", function() {
@@ -255,7 +254,9 @@ describe( "halon", function() {
 			var hc;
 			var actionResult;
 			var results = [];
+			var consoleStub;
 			before( function( done ) {
+				consoleStub = sinon.stub( console, "warn" ); // Silence console output
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -284,11 +285,17 @@ describe( "halon", function() {
 			it( "should invoke onReject callback with connection error", function() {
 				results[ 0 ].toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
 			} );
+			it( "should warn of the connection error", function() {
+				consoleStub.should.have.callCount( 6 );
+			} );
 			it( "should reject API calls", function() {
 				actionResult.toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
 			} );
 			it( "should attempt connection again if 'start' is called", function() {
 				results.length.should.equal( 5 );
+			} );
+			after( function() {
+				consoleStub.restore();
 			} );
 		} );
 	} );
