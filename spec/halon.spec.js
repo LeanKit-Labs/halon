@@ -27,6 +27,11 @@ describe( "halon", function() {
 				hc.should.have.property( "_actions" );
 				hc._links.should.eql( expectedOptionsResponse._links );
 			} );
+			it( "should immediately invoke onReady if already in a ready state", function() {
+				var callback = sinon.stub();
+				hc.onReady( callback );
+				callback.should.be.calledOnce;
+			} );
 		} );
 		describe( "with local root", function() {
 			var hc;
@@ -353,6 +358,27 @@ describe( "halon", function() {
 				_.each( expectedBoardResponse.embedded, function( val, key ) {
 					board[ key ].should.eql( val );
 				} );
+			} );
+		} );
+		describe( "when invoking a root 'options' resource link that wasn't returned on the OPTIONS call", function() {
+			var hc;
+			var results = [];
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {
+						board: [ "shouldFail" ]
+					},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					done();
+				} );
+			} );
+
+			it( "should throw an error", function() {
+				return hc._actions.board.shouldFail().should.be.rejectedWith( /No link definition/ );
 			} );
 		} );
 		describe( "when following a rel link on a returned resource", function() {
@@ -768,6 +794,34 @@ describe( "halon", function() {
 				} );
 			} );
 		} );
+		describe( "when processing failed responses (404)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			var consoleStub;
+			var hc;
+			before( function() {
+				consoleStub = sinon.stub( console, "warn" ); // Silence console output
+				hc = halon( {
+					root: "http://localhost:8088/analytics/not_exist",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+			} );
+
+			it( "should return an empty response", function( done ) {
+				hc.onRejected( function( client, err, listener ) {
+					err.should.match( /Not found/ );
+					listener.off();
+					done();
+				} );
+			} );
+			after( function() {
+				consoleStub.restore();
+			} );
+		} );
+	} );
 	describe( "when using adapters", function() {
 		describe( "when setting a default adapter", function() {
 			describe( "with no adapter passed into the factory", function() {

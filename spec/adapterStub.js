@@ -20,13 +20,17 @@ var adapter = function( resultsArray ) {
 		resultsArray.push( arguments );
 		var res;
 		res = mocks[ link.href ];
-		return when( res )
-			.then( function( resp ) {
-				if ( resultsArray ) {
-					resultsArray.push( resp );
-				}
-				return when( res );
-			} );
+		if ( mocks.hasOwnProperty( link.href ) ) {
+			return when( res )
+				.then( function( resp ) {
+					if ( resultsArray ) {
+						resultsArray.push( resp );
+					}
+					return when( res );
+				} );
+		} else {
+			return when.reject( new Error( "Not found" ) );
+		}
 	};
 };
 

@@ -104,7 +104,7 @@
 	function processKnownOptions( knownOptions ) {
 		var x = _.reduce( knownOptions, function( memo, rels, resource ) {
 			rels.forEach( function( rel ) {
-				memo._links[ resource + ":" + rel ] = {};
+				memo._links[ resource + ":" + rel ] = undefined;
 			} );
 			return memo;
 		}, { _links: {} } );
