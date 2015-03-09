@@ -34,7 +34,7 @@
     "build": "gulp",
     "test": "./node_modules/mocha/bin/mocha -r spec/helpers/node-setup.js spec",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -x 'spec/**/*'  -- -r spec/helpers/node-setup.js spec spec/*.spec.js",
-    "show-coverage" : "open ./coverage/lcov-report/index.html"
+    "show-coverage": "open ./coverage/lcov-report/index.html"
   },
   "dependencies": {
     "URIjs": "^1.14.1",
@@ -43,6 +43,7 @@
     "when": "3.x"
   },
   "devDependencies": {
+    "chai": "^2.1.1",
     "gulp": "^3.8.11",
     "gulp-header": "^1.0.5",
     "gulp-hint-not": "0.0.3",
@@ -51,8 +52,7 @@
     "gulp-spawn-mocha": "^2.0.1",
     "gulp-uglify": "^1.1.0",
     "istanbul": "^0.3.7",
-    "mocha": "^2.2.0",
-    "should": "^4.0.4"
+    "mocha": "^2.2.0"
   },
   "engines": {
     "node": ">=0.10.0"
