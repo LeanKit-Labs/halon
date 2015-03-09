@@ -15,7 +15,6 @@ var mocks = {
 	"http://localhost:8088/analytics/api/elevated/gimme": "User lacks sufficient permissions",
 	"http://localhost:8088/analytics/api/this/204": ""
 };
-var when = require( "when" );
 var adapter = function( resultsArray ) {
 	return function( link, data ) {
 		resultsArray.push( arguments );

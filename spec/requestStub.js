@@ -1,4 +1,3 @@
-var _ = require( "lodash" );
 module.exports = function( adapterStub ) {
 	var junk = [];
 	var req = {
