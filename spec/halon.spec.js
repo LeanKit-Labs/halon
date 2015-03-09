@@ -335,13 +335,13 @@ describe( "halon", function() {
 				} );
 			} );
 			it( "should create _actions on returned resource", function() {
-				( typeof board._actions.self ).should.equal( "function" );
-				( typeof board._actions.minimal ).should.equal( "function" );
-				( typeof board._actions.users ).should.equal( "function" );
-				( typeof board._actions.cards ).should.equal( "function" );
-				( typeof board._actions.cardTypes ).should.equal( "function" );
-				( typeof board._actions.classesOfService ).should.equal( "function" );
-				( typeof board._actions.lanes ).should.equal( "function" );
+				board._actions.self.should.be.a( "function" );
+				board._actions.minimal.should.be.a( "function" );
+				board._actions.users.should.be.a( "function" );
+				board._actions.cards.should.be.a( "function" );
+				board._actions.cardTypes.should.be.a( "function" );
+				board._actions.classesOfService.should.be.a( "function" );
+				board._actions.lanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id", "title", "description", "classOfServiceEnabled", "organizationId", "laneTypes", "laneClassTypes", "tags", "priorities" ];
@@ -388,12 +388,12 @@ describe( "halon", function() {
 				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should create _actions on returned resource", function() {
-				( typeof lanes._actions.self ).should.equal( "function" );
-				( typeof lanes._actions.minimal ).should.equal( "function" );
-				( typeof lanes._actions.users ).should.equal( "function" );
-				( typeof lanes._actions.cardTypes ).should.equal( "function" );
-				( typeof lanes._actions.classesOfService ).should.equal( "function" );
-				( typeof lanes._actions.lanes ).should.equal( "function" );
+				lanes._actions.self.should.be.a( "function" );
+				lanes._actions.minimal.should.be.a( "function" );
+				lanes._actions.users.should.be.a( "function" );
+				lanes._actions.cardTypes.should.be.a( "function" );
+				lanes._actions.classesOfService.should.be.a( "function" );
+				lanes._actions.lanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id" ];
@@ -515,9 +515,9 @@ describe( "halon", function() {
 			} );
 			it( "should create _actions on returned resources", function() {
 				_.each( collection.cards, function( card ) {
-					( typeof card._actions.self ).should.equal( "function" );
-					( typeof card._actions.block ).should.equal( "function" );
-					( typeof card._actions.move ).should.equal( "function" );
+					card._actions.self.should.be.a( "function" );
+					card._actions.block.should.be.a( "function" );
+					card._actions.move.should.be.a( "function" );
 				} );
 			} );
 			it( "should return expected number of resources", function() {
