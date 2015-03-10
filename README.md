@@ -1,4 +1,4 @@
-# halon v0.0.2
+# halon v0.1.0
 
 ## Obligatory Disclaimer
 This project is not stable yet - expect *lots* of change. Don't say we didn't warn you. :-)
@@ -27,7 +27,9 @@ The `options` arg that's passed to halon can contain the following:
 * `version` - defaults to "1". Allows you to set the api version. Halon will then change the `Accept` header value appropriately (e.g. - version 2 would get you `application/hal.v2+json`).
 
 ## Root API
-Halon only needs your root API. As it initializes, it will make an `OPTIONS` request against this url, and the options returned from the server will be processed, creating resource methods you can invoke on your client instance. Any resources (and their related "rels") will be available under client._actions. For example, if your server returns an options response like this, the methods `client._actions.user.self` and `client._actions.user.addresses` would be available:
+Halon only needs your root API. As it initializes, it will make an `OPTIONS` request against this url, and the options returned from the server will be processed, creating resource methods you can invoke on your client instance. Any resources (and their related "rels") will be available al properties of the client instance. For example, if your server returns an options response like this, the methods `client.user.self` and `client.user.getAddresses` would be available:
+
+> Note: in order to prevent naming collisions - action names should denote an action and not overlap with property names.
 
 ```javascript
 {
@@ -37,7 +39,7 @@ Halon only needs your root API. As it initializes, it will make an `OPTIONS` req
             "method": "GET",
             "templated": true
         },
-        "user:addresses": {
+        "user:getAddresses": {
             "href": "/api/user/{id}/address",
             "method": "GET",
             "templated": true
@@ -61,7 +63,7 @@ var client = halon( {
 } );
 client.onReady( function( client ) {
 	// Any resources/rels returned as part of the options
-	// are know available to invoke under client._actions.
+	// are now available to invoke.
 	// The halon client instance is passed as an argument
 	// to this callback for convenience.
 } );
@@ -93,9 +95,8 @@ Let's say the first thing you want to do, after we've processed our options resp
 ```javascript
 // the id here needs to match the templated url id exactly
 // (e.g. - /api/user/{id})
-client._actions.user.self({ id: 12 }).then(user) {
-	// user resource - would contain it's own _actions
-	// property for any rels included with the resource.
+client.user.self({ id: 12 }).then(user) {
+	// user resource - will contain actions for all rels included.
 	// halon takes embedded resources and places them on
 	// the parent resource's state, using the embedded key
 	// name as the property name. For example, if user
@@ -104,7 +105,7 @@ client._actions.user.self({ id: 12 }).then(user) {
 	var toRemove = user.addresses.filter(function(address) {
 		return address.city === "Nashville";
 	})[0];
-	user._actions.deleteAddress({ id: toRemove.id }).then(function(){
+	user.deleteAddress({ id: toRemove.id }).then(function(){
 		console.log("Buh bye Nashville....");
 	});
 });
@@ -149,10 +150,10 @@ You can also supply a `?` property to the `options` argument to define parameter
 
 ```javascript
 // trust that the URL defines these variables either by path or query parameters
-client._actions.board.list( { page: 1, limit: 10 } );
+client.board.getList( { page: 1, limit: 10 } );
 
 // pass parameters explicitly - could lead to your call failing later if the route changes
-client._actions.board.list( { "?": { page: 1, limit: 10 } } )
+client.board.getList( { "?": { page: 1, limit: 10 } } )
 ```
 
 #### arrays
@@ -160,7 +161,7 @@ client._actions.board.list( { "?": { page: 1, limit: 10 } } )
 There are times when the body you need to submit to an action will be an array (e.g. a list of ops for a PATCH). To submit an array and still provide values to any path arguments or query parameters that may exist on the call, simply include the array in a `body` property:
 
 ```javascript
-client._actions.board.edit( {
+client.board.edit( {
 	id: 100100,
 	body: [
 		{ op: "change", path: "title", value: "New Board Title" },
@@ -212,7 +213,7 @@ __Form submission & Uploads__
 // assuming you have a resource named "file" and a POST action "upload"
 var form = {};
 form[ "myFile.txt" ] = fs.createReadStream( "/path/to/myFile.txt" );
-client._actions.file.upload( { formData: form } );
+client.file.upload( { formData: form } );
 ```
 
 ## Specifying Custom Headers
@@ -232,7 +233,7 @@ var hc = halon( {
 
 // To provide resource-level headers, pass a headers object
 // as the second argument to the resource action method:
-hc._actions.board.self(
+hc.board.self(
 	{ id: 101 },
 	{ "If-Match": "8675309" }
 ).then( function() {

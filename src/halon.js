@@ -88,7 +88,7 @@
 	}
 
 	function processLinks( options, fsm ) {
-		var actions = options._actions = {};
+		var actions = options;
 		_.each( options._links, function( linkDef, relKey ) {
 			var splitKey = relKey.split( ":" );
 			var rel = relKey;
@@ -156,7 +156,7 @@
 					if ( resourceDef.templated || resourceDef.parameters || data[ "?" ] ) {
 						resourceDef = _.extend( {}, resourceDef, { href: expandLink( resourceDef, data ) } );
 					}
-					if( data.body ) {
+					if ( data.body ) {
 						data = data.body;
 					}
 					this.adapter( resourceDef, { data: data, headers: this.getHeaders( headers ), server: this.server } )

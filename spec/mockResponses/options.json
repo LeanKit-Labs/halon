@@ -13,27 +13,27 @@
             "method": "GET",
             "templated": true
         },
-        "board:users": {
+        "board:getUsers": {
             "href": "/analytics/api/board/{id}/user",
             "method": "GET",
             "templated": true
         },
-        "board:cards": {
+        "board:getCards": {
             "href": "/analytics/api/board/{id}/card",
             "method": "GET",
             "templated": true
         },
-        "board:cardTypes": {
+        "board:getCardTypes": {
             "href": "/analytics/api/board/{id}/cardtype",
             "method": "GET",
             "templated": true
         },
-        "board:classesOfService": {
+        "board:getClassesOfService": {
             "href": "/analytics/api/board/{id}/classOfService",
             "method": "GET",
             "templated": true
         },
-        "board:lanes": {
+        "board:getLanes": {
             "href": "/analytics/api/board/{id}/lane",
             "method": "GET",
             "templated": true
@@ -76,11 +76,11 @@
             "href": "/analytics/api/_autohost",
             "method": "GET"
         },
-        "_autohost:resources": {
+        "_autohost:getResources": {
             "href": "/analytics/api/_autohost/resource",
             "method": "GET"
         },
-        "_autohost:actions": {
+        "_autohost:getActions": {
             "href": "/analytics/api/_autohost/action",
             "method": "GET"
         },
@@ -182,7 +182,7 @@
                 "version": { "choice": [ "0.1.0", "0.1.2", "0.1.4" ] }
             }
         },
-        "package:project": {
+        "package:getProject": {
             "href": "/analytics/api/nonstop/project",
             "method": "GET"
         },
