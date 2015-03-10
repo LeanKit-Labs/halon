@@ -653,7 +653,7 @@ describe( "halon", function() {
 				} );
 				hc.onReady( function( hc ) {
 					hc._actions.board.edit( {
-						id: 100,
+						id: 101,
 						body: [
 							{ op: "change", path: "title", value: "New Board Title" },
 							{ op: "change", path: "description", value: "This is a new description for the board" }
@@ -666,7 +666,7 @@ describe( "halon", function() {
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
-					href: "/analytics/api/board/100",
+					href: "/analytics/api/board/101",
 					method: "PATCH",
 					templated: true
 				} );
