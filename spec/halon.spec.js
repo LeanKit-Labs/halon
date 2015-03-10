@@ -607,6 +607,49 @@ describe( "halon", function() {
 			} );
 		} );
 
+		describe( "when calling an action with user supplied parameters and array body", function() {
+			var hc;
+			var results = [];
+			var list;
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					hc._actions.board.edit( {
+						id: 100,
+						body: [
+							{ op: "change", path: "title", value: "New Board Title" },
+							{ op: "change", path: "description", value: "This is a new description for the board" }
+						]
+					} ).then( function( result ) {
+						list = result;
+						done();
+					} );
+				} );
+			} );
+			it( "should pass expected arguments to the adapter", function() {
+				results[ 2 ][ 0 ].should.eql( {
+					href: "/analytics/api/board/100",
+					method: "PATCH",
+					templated: true
+				} );
+				results[ 2 ][ 1 ].should.eql(
+					{
+						data: [
+							{ op: "change", path: "title", value: "New Board Title" },
+							{ op: "change", path: "description", value: "This is a new description for the board" }
+						],
+						headers: { Accept: "application/hal.v3+json" },
+						server: "http://localhost:8088"
+					}
+				);
+			} );
+		} );
+
 		describe( "when sending formData (request adapter only)", function() {
 			var results = [];
 			var resp;
