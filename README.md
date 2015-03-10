@@ -25,6 +25,7 @@ The `options` arg that's passed to halon can contain the following:
 * `knownOptions` (optional) - an object containing resources (keys) and their rels that you know about ahead of time. This enables you to begin making requests before the `OPTIONS` reponse has technically returned, though halon will simply queue the requests underneath the hood, and release them once the `OPTIONS` response has been processed.
 * `adapter` - a function with the signature of `(link, options)` that handles translating halon's meta data to the HTTP transport of your choice. a jQuery adapter is included in halon and can be accessed by call `halon.jQueryAdapter($)` (note that you need to pass jQuery to the method call).
 * `version` - defaults to "1". Allows you to set the api version. Halon will then change the `Accept` header value appropriately (e.g. - version 2 would get you `application/hal.v2+json`).
+* `start` - try to establish a connection immediately; do not wait for the `connect` call.
 
 ## Root API
 Halon only needs your root API. As it initializes, it will make an `OPTIONS` request against this url, and the options returned from the server will be processed, creating resource methods you can invoke on your client instance. Any resources (and their related "rels") will be available al properties of the client instance. For example, if your server returns an options response like this, the methods `client.user.self` and `client.user.getAddresses` would be available:
@@ -48,44 +49,51 @@ Halon only needs your root API. As it initializes, it will make an `OPTIONS` req
 }
 ```
 
-If you already know ahead of time about any resources that the root `OPTIONS` response will include, you can provide them via the `knownOptions` property on the options passed to halon. This sets up the methods ahead of time, and invoking them results in a request being queued. Once the `OPTIONS` response has been processed, halon internally moves into a `ready` state, and any queued requests will be sent to the server in the order they were queued. This behavior can be helpful in avoiding often-unwieldy "temporal dependency" code, where calls against halon's API would have to be done inside an `onReady` callback.
+If you already know ahead of time about any resources that the root `OPTIONS` response will include, you can provide them via the `knownOptions` property on the options passed to halon. This sets up the methods ahead of time, and invoking them results in a request being queued. Once the `OPTIONS` response has been processed, halon internally moves into a `ready` state, and any queued requests will be sent to the server in the order they were queued. This behavior can be helpful in avoiding often-unwieldy "temporal dependency" code, where calls against halon's API would have to be done after resolving the `connect` promise or after handling the `ready` event.
 
 ### Connectivity
-Halon provides two callbacks that signal the status of the underlying adapter.
+Halon provides a connect call to initiate the connection and two events that signal the status of the underlying adapter.
 
-#### onReady( callback )
-Notifies you when the `OPTIONS` response has been processed and the client is in a `ready` state:
+#### connect()
+The connect call returns a promise that will either resolve to the client instance or reject with a connection error after the `OPTIONS` call is made.
+
+> Multiple calls to connect before the connection is established or rejected will result in the same promise.
 
 ```javascript
 var client = halon( {
 	root: "http://server/api",
 	adapter: halon.jQueryAdapter($)
 } );
-client.onReady( function( client ) {
-	// Any resources/rels returned as part of the options
-	// are now available to invoke.
-	// The halon client instance is passed as an argument
-	// to this callback for convenience.
-} );
+client.connect()
+	.then( onSuccess, onFailure );
 ```
 
-#### onRejected( callback, [persistent] )
-Notifies you when the `OPTIONS` call has failed. Pass true to the `persistent` argument if you'd like your callback to be invoked for _every_ failed connection attempt.
+#### on( event, callback, [persistent] )
+Attach a callback to one of two events:
+ * `ready` - fires when the `OPTIONS` call succeeds
+ * `rejected` - fires when the `OPTIONS` call fails
 
-The callback's `listener` argument can be used to turn off a persistent `onRejected` callback.
+Pass true to the `persistent` argument if you'd like your callback to be invoked _every_ time the event fires.
 
-> Recommendation - Use this callback to plug in a connection management strategy.
+> Recommendation - Use the event handlers to plug in a connection management strategy.
 
 ```javascript
 var client = halon( {
 	root: "http://server/api",
 	adapter: halon.jQueryAdapter($)
 } );
-client.onReady( ... )
-client.onRejected( function( client, err, listener ) {
-	// call client.start() to attempt the connection again
-	// call listener.off() when you no longer wish to receive callbacks
-} );
+client
+	.on( "ready", function( client ) {
+		// Any resources/rels returned as part of the options
+		// are now available to invoke.
+		// The halon client instance is passed as an argument
+		// to this callback for convenience.
+	} )
+	.on( "rejected", function( client, err, listener ) {
+		// call client.connect() to attempt the connection again
+		// call listener.off() when you no longer wish to receive callbacks
+	} )
+	.connect();
 ```
 
 ## Getting Resources

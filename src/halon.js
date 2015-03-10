@@ -123,7 +123,7 @@
 
 		states: {
 			uninitialized: {
-				"start": "initializing",
+				"connect": "initializing",
 				"invoke.resource": function() {
 					this.deferUntilTransition( "ready" );
 				}
@@ -148,6 +148,12 @@
 				}
 			},
 			ready: {
+				_onEnter: function() {
+					if ( this.client.deferred ) {
+						this.client.deferred.resolve( this.client );
+						this.client.deferred = undefined;
+					}
+				},
 				"invoke.resource": function( resource, rel, data, headers, success, err ) {
 					var resourceDef = resource._links[ rel ];
 					if ( !resourceDef ) {
@@ -167,7 +173,13 @@
 				}
 			},
 			"connection.failed": {
-				"start": "initializing",
+				_onEnter: function() {
+					if ( this.client.deferred ) {
+						this.client.deferred.reject( this.connectionError );
+						this.client.deferred = undefined;
+					}
+				},
+				"connect": "initializing",
 				"invoke.resource": function( resource, rel, data, headers, success, err ) {
 					err( this.connectionError );
 				}
@@ -205,31 +217,42 @@
 			}
 			var listener;
 			listener = fsm.on( "transition", function( data ) {
-				if ( data.toState === state ) {
-					if ( !persist ) {
-						listener.off();
+				// this is necessary to ensure that the promise resolves
+				// before invoking the event listener callback!
+				process.nextTick( function() {
+					if ( data.toState === state ) {
+						if ( !persist ) {
+							listener.off();
+						}
+						cb( client, fsm.connectionError, listener );
 					}
-					cb( client, fsm.connectionError, listener );
-				}
+				} );
 			} );
 		};
-		client.onReady = function( cb ) {
-			listenFor( "ready", cb );
-			return client;
-		};
-		client.onRejected = function( cb, persist ) {
-			listenFor( "connection.failed", cb, persist );
+
+		client.on = function( eventName, cb, persist ) {
+			if ( eventName === "ready" ) {
+				listenFor( "ready", cb, persist );
+			} else if ( eventName === "rejected" ) {
+				listenFor( "connection.failed", cb, persist );
+			} else {
+				throw new Error( "Only 'ready' and 'rejected' events are supported by this emitter." );
+			}
 			return client;
 		};
 
-		client.start = function() {
-			fsm.handle( "start" );
-			return client;
+		client.connect = function() {
+			var pending = this.deferred && this.deferred.promise.inspect().state !== "fulfilled";
+			if ( !pending ) {
+				this.deferred = when.defer();
+				fsm.handle( "connect" );
+			}
+			return this.deferred.promise;
 		};
 
-		if ( !options.doNotStart ) {
+		if ( options.start ) {
 			setTimeout( function() {
-				client.start();
+				client.connect().catch( function() {} );
 			}, 0 );
 		}
 

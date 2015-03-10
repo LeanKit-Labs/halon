@@ -1,6 +1,10 @@
 ## 0.0.*
 
-### 0.0.3
+### Current
+ * Changed `start` to `connect` which now returns a promise
+ * Changed onReady/onReject callbacks to simple `on` event handlers
+ * Changed automatic connection behavior to opt-in (vs. opt-out)
+ * Removed `_actions` property from top level and resource instances
  * Request adapter should include the correct content-type header
  * Don't throw errors on empty responses (204s for example are valid, empty body responses)
  * Request adapter should not send empty JSON body
