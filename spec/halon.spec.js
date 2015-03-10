@@ -7,7 +7,7 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ]
+						board: [ "self", "getUsers", "getCardTypes" ]
 					},
 					adapter: adapterFactory( results ),
 					version: 2
@@ -24,7 +24,6 @@ describe( "halon", function() {
 				results[ 0 ][ 1 ].headers.Accept.should.equal( "application/hal.v2+json" );
 			} );
 			it( "should create expected options structure on halon client instance", function() {
-				hc.should.have.property( "_actions" );
 				hc._links.should.eql( expectedOptionsResponse._links );
 			} );
 			it( "should immediately invoke onReady if already in a ready state", function() {
@@ -40,7 +39,7 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ]
+						board: [ "self", "getUsers", "getCardTypes" ]
 					},
 					adapter: adapterFactory( results ),
 					version: 2
@@ -57,7 +56,6 @@ describe( "halon", function() {
 				results[ 0 ][ 1 ].headers.Accept.should.equal( "application/hal.v2+json" );
 			} );
 			it( "should create expected options structure on halon client instance", function() {
-				hc.should.have.property( "_actions" );
 				hc._links.should.eql( expectedOptionsResponse._links );
 			} );
 		} );
@@ -69,7 +67,7 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ],
+						board: [ "self", "getUsers", "getCardTypes" ],
 						user: [ "self" ]
 					},
 					adapter: adapterFactory( results ),
@@ -79,8 +77,8 @@ describe( "halon", function() {
 				hc.fsm.on( "deferred", function( data ) {
 					events.push( data );
 				} );
-				hc._actions.board.self( { id: 101 } );
-				hc._actions.user.self( { id: 1 } );
+				hc.board.self( { id: 101 } );
+				hc.user.self( { id: 1 } );
 				hc.start();
 				hc.onReady( function( hc ) {
 					done();
@@ -125,7 +123,6 @@ describe( "halon", function() {
 				} );
 			} );
 			it( "should create expected options structure on halon client instance", function() {
-				hc.should.have.property( "_actions" );
 				hc._links.should.eql( expectedOptionsResponse._links );
 			} );
 			it( "should make an OPTIONS request", function() {
@@ -142,7 +139,7 @@ describe( "halon", function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/api",
 						knownOptions: {
-							board: [ "self", "users", "cardTypes" ],
+							board: [ "self", "getUsers", "getCardTypes" ],
 							user: [ "self" ]
 						},
 						adapter: adapterFactory( results ),
@@ -153,7 +150,7 @@ describe( "halon", function() {
 						}
 					} );
 					hc.onReady( function( hc ) {
-						hc._actions.board.self( { id: 101 } ).then( function() {
+						hc.board.self( { id: 101 } ).then( function() {
 							done();
 						} );
 					} );
@@ -180,14 +177,14 @@ describe( "halon", function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/api",
 						knownOptions: {
-							board: [ "self", "users", "cardTypes" ],
+							board: [ "self", "getUsers", "getCardTypes" ],
 							user: [ "self" ]
 						},
 						adapter: adapterFactory( results ),
 						version: 1
 					} );
 					hc.onReady( function( hc ) {
-						hc._actions.board.self(
+						hc.board.self(
 							{
 								id: 101
 							},
@@ -218,7 +215,7 @@ describe( "halon", function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/api",
 						knownOptions: {
-							board: [ "self", "users", "cardTypes" ],
+							board: [ "self", "getUsers", "getCardTypes" ],
 							user: [ "self" ]
 						},
 						adapter: adapterFactory( results ),
@@ -228,7 +225,7 @@ describe( "halon", function() {
 						}
 					} );
 					hc.onReady( function( hc ) {
-						hc._actions.board.self(
+						hc.board.self(
 							{
 								id: 101
 							},
@@ -265,7 +262,7 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ]
+						board: [ "self", "getUsers", "getCardTypes" ]
 					},
 					adapter: function() {
 						return when.reject( new Error( "Server can't talk right now, hazza sad :(" ) );
@@ -277,7 +274,7 @@ describe( "halon", function() {
 					results.push( err );
 					if ( results.length > 4 ) {
 						handle.off();
-						hc._actions.board.self()
+						hc.board.self()
 							.then( null, function( err ) {
 								actionResult = err;
 								done();
@@ -314,14 +311,14 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ],
+						board: [ "self", "getUsers", "getCardTypes" ],
 						user: [ "self" ]
 					},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.board.self( { id: 101 } ).then( function( bd ) {
+					hc.board.self( { id: 101 } ).then( function( bd ) {
 						board = bd;
 						done();
 					} );
@@ -340,13 +337,13 @@ describe( "halon", function() {
 				} );
 			} );
 			it( "should create _actions on returned resource", function() {
-				board._actions.self.should.be.a( "function" );
-				board._actions.minimal.should.be.a( "function" );
-				board._actions.users.should.be.a( "function" );
-				board._actions.cards.should.be.a( "function" );
-				board._actions.cardTypes.should.be.a( "function" );
-				board._actions.classesOfService.should.be.a( "function" );
-				board._actions.lanes.should.be.a( "function" );
+				board.self.should.be.a( "function" );
+				board.minimal.should.be.a( "function" );
+				board.getUsers.should.be.a( "function" );
+				board.getCards.should.be.a( "function" );
+				board.getCardTypes.should.be.a( "function" );
+				board.getClassesOfService.should.be.a( "function" );
+				board.getLanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id", "title", "description", "classOfServiceEnabled", "organizationId", "laneTypes", "laneClassTypes", "tags", "priorities" ];
@@ -378,7 +375,7 @@ describe( "halon", function() {
 			} );
 
 			it( "should throw an error", function() {
-				return hc._actions.board.shouldFail().should.be.rejectedWith( /No link definition/ );
+				return hc.board.shouldFail().should.be.rejectedWith( /No link definition/ );
 			} );
 		} );
 		describe( "when following a rel link on a returned resource", function() {
@@ -390,16 +387,16 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "self", "users", "cardTypes" ],
+						board: [ "self", "getUsers", "getCardTypes" ],
 						user: [ "self" ]
 					},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.board.self( { id: 101 } ).then( function( bd ) {
+					hc.board.self( { id: 101 } ).then( function( bd ) {
 						board = bd;
-						board._actions.lanes().then( function( l ) {
+						board.getLanes().then( function( l ) {
 							lanes = l;
 							done();
 						} );
@@ -414,12 +411,12 @@ describe( "halon", function() {
 				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should create _actions on returned resource", function() {
-				lanes._actions.self.should.be.a( "function" );
-				lanes._actions.minimal.should.be.a( "function" );
-				lanes._actions.users.should.be.a( "function" );
-				lanes._actions.cardTypes.should.be.a( "function" );
-				lanes._actions.classesOfService.should.be.a( "function" );
-				lanes._actions.lanes.should.be.a( "function" );
+				lanes.self.should.be.a( "function" );
+				lanes.minimal.should.be.a( "function" );
+				lanes.getUsers.should.be.a( "function" );
+				lanes.getCardTypes.should.be.a( "function" );
+				lanes.getClassesOfService.should.be.a( "function" );
+				lanes.getLanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id" ];
@@ -463,7 +460,7 @@ describe( "halon", function() {
 						version: 3
 					} );
 					hc.onReady( function( hc ) {
-						hc._actions.board.addLane( lane ).then( function() {
+						hc.board.addLane( lane ).then( function() {
 							done();
 						} );
 					} );
@@ -491,17 +488,17 @@ describe( "halon", function() {
 			it( "should allow for parallel resource link invocations", function( done ) {
 				hc.onReady( function( hc ) {
 					hc(
-						hc._actions.user.self( { id: 1 } ),
-						hc._actions.board.self( { id: 101 } ),
-						hc._actions.board.cardTypes( { id: 101 } )
+						hc.user.self( { id: 1 } ),
+						hc.board.self( { id: 101 } ),
+						hc.board.getCardTypes( { id: 101 } )
 					).then( function( responses ) {
 						var userReponse = responses[ 0 ];
 						var boardResponse = responses[ 1 ];
 						var cardTypesReponse = responses[ 2 ];
 						// remove the _actions prop so we can do an `eql` comparison
-						delete userReponse._actions;
-						delete boardResponse._actions;
-						delete cardTypesReponse._actions;
+						delete userReponse;
+						delete boardResponse;
+						delete cardTypesReponse;
 						userReponse.should.eql( expectedUserResponse );
 						boardResponse.should.eql( expectedBoardResponse );
 						cardTypesReponse.should.eql( expectedCardTypeResponse );
@@ -519,13 +516,13 @@ describe( "halon", function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
-						board: [ "cards" ]
+						board: [ "getCards" ]
 					},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.board.cards( { id: 101 } ).then( function( result ) {
+					hc.board.getCards( { id: 101 } ).then( function( result ) {
 						collection = result;
 						done();
 					} );
@@ -541,9 +538,9 @@ describe( "halon", function() {
 			} );
 			it( "should create _actions on returned resources", function() {
 				_.each( collection.cards, function( card ) {
-					card._actions.self.should.be.a( "function" );
-					card._actions.block.should.be.a( "function" );
-					card._actions.move.should.be.a( "function" );
+					card.self.should.be.a( "function" );
+					card.block.should.be.a( "function" );
+					card.move.should.be.a( "function" );
 				} );
 			} );
 			it( "should return expected number of resources", function() {
@@ -577,7 +574,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.package.list( {
+					hc.package.list( {
 						project: "one",
 						build: 1,
 						version: "0.1.0"
@@ -616,7 +613,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.package.project( {
+					hc.package.getProject( {
 						"?": {
 							owner: "me",
 							build: 1,
@@ -652,7 +649,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.board.edit( {
+					hc.board.edit( {
 						id: 101,
 						body: [
 							{ op: "change", path: "title", value: "New Board Title" },
@@ -695,7 +692,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.package.upload( {
+					hc.package.upload( {
 						formData: {
 							"myFile.txt": { pretendFileStream: true }
 						}
@@ -731,7 +728,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.elevated.gimme( {
+					hc.elevated.gimme( {
 						this: "is a test",
 						for: "a json body"
 					} ).then( function( result ) {
@@ -772,7 +769,7 @@ describe( "halon", function() {
 					version: 3
 				} );
 				hc.onReady( function( hc ) {
-					hc._actions.this.delete()
+					hc.this.delete()
 						.then( function( result ) {
 							resp = result;
 							done();

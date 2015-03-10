@@ -71,23 +71,23 @@
             "href": "/analytics/api/board/101",
             "method": "GET"
         },
-        "users": {
+        "getUsers": {
             "href": "/analytics/api/board/101/user",
             "method": "GET"
         },
-        "cards": {
+        "getCards": {
             "href": "/analytics/api/board/101/card",
-            "method": "GET" 
+            "method": "GET"
         },
-        "cardTypes": {
+        "getCardTypes": {
             "href": "/analytics/api/board/101/cardtype",
             "method": "GET"
         },
-        "classesOfService": {
+        "getClassesOfService": {
             "href": "/analytics/api/board/101/classOfService",
             "method": "GET"
         },
-        "lanes": {
+        "getLanes": {
             "href": "/analytics/api/board/101/lane",
             "method": "GET"
         }
