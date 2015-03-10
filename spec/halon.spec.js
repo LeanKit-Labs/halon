@@ -3,18 +3,17 @@ describe( "halon", function() {
 		describe( "with no start delay", function() {
 			var hc;
 			var results = [];
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
 						board: [ "self", "getUsers", "getCardTypes" ]
 					},
 					adapter: adapterFactory( results ),
-					version: 2
+					version: 2,
+					start: true
 				} );
-				hc.onReady( function( hc ) {
-					done();
-				} );
+				return hc.connect();
 			} );
 			it( "should make an OPTIONS request", function() {
 				results.length.should.equal( 2 );
@@ -28,14 +27,14 @@ describe( "halon", function() {
 			} );
 			it( "should immediately invoke onReady if already in a ready state", function() {
 				var callback = sinon.stub();
-				hc.onReady( callback );
+				hc.on( "ready", callback );
 				callback.should.be.calledOnce;
 			} );
 		} );
 		describe( "with local root", function() {
 			var hc;
 			var results = [];
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "/analytics/api",
 					knownOptions: {
@@ -44,9 +43,7 @@ describe( "halon", function() {
 					adapter: adapterFactory( results ),
 					version: 2
 				} );
-				hc.onReady( function( hc ) {
-					done();
-				} );
+				return hc.connect();
 			} );
 			it( "should make an OPTIONS request", function() {
 				results.length.should.equal( 2 );
@@ -63,7 +60,7 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var events = [];
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -71,18 +68,14 @@ describe( "halon", function() {
 						user: [ "self" ]
 					},
 					adapter: adapterFactory( results ),
-					version: 1,
-					doNotStart: true
+					version: 1
 				} );
 				hc.fsm.on( "deferred", function( data ) {
 					events.push( data );
 				} );
 				hc.board.self( { id: 101 } );
 				hc.user.self( { id: 1 } );
-				hc.start();
-				hc.onReady( function( hc ) {
-					done();
-				} );
+				return hc.connect();
 			} );
 			it( "should allow pre-defined resource methods to fire before options response returns", function() {
 				events[ 0 ].queuedArgs.args[ 0 ].should.eql( {
@@ -149,11 +142,11 @@ describe( "halon", function() {
 							"If-Match": "8675309"
 						}
 					} );
-					hc.onReady( function( hc ) {
+					hc.on( "ready", function( hc ) {
 						hc.board.self( { id: 101 } ).then( function() {
 							done();
 						} );
-					} );
+					} ).connect();
 				} );
 				it( "should send custom headers with OPTIONS request", function() {
 					results[ 0 ][ 1 ].headers.should.eql( {
@@ -173,7 +166,7 @@ describe( "halon", function() {
 			describe( "with resource-level headers specified", function() {
 				var hc;
 				var results = [];
-				before( function( done ) {
+				before( function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/api",
 						knownOptions: {
@@ -181,21 +174,21 @@ describe( "halon", function() {
 							user: [ "self" ]
 						},
 						adapter: adapterFactory( results ),
-						version: 1
+						version: 1,
+						start: true
 					} );
-					hc.onReady( function( hc ) {
-						hc.board.self(
-							{
-								id: 101
-							},
-							{
-								"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
-								"If-Match": "8675309"
-							}
-						).then( function() {
-							done();
+					return hc.connect()
+						.then( function( hc ) {
+							return hc.board.self(
+								{
+									id: 101
+								},
+								{
+									"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT",
+									"If-Match": "8675309"
+								}
+							);
 						} );
-					} );
 				} );
 				it( "should NOT send custom headers with OPTIONS request", function() {
 					results[ 0 ][ 1 ].headers.should.eql( { Accept: "application/hal.v1+json" } );
@@ -211,7 +204,7 @@ describe( "halon", function() {
 			describe( "with client-level AND resource-level headers specified", function() {
 				var hc;
 				var results = [];
-				before( function( done ) {
+				before( function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/api",
 						knownOptions: {
@@ -224,18 +217,17 @@ describe( "halon", function() {
 							"If-Modified-Since": "Sat, 29 Nov 2014 19:35:20 GMT"
 						}
 					} );
-					hc.onReady( function( hc ) {
-						hc.board.self(
-							{
-								id: 101
-							},
-							{
-								"If-Match": "8675309"
-							}
-						).then( function() {
-							done();
+					return hc.connect()
+						.then( function( hc ) {
+							return hc.board.self(
+								{
+									id: 101
+								},
+								{
+									"If-Match": "8675309"
+								}
+							);
 						} );
-					} );
 				} );
 				it( "should send client-level custom headers with OPTIONS request", function() {
 					results[ 0 ][ 1 ].headers.should.eql( {
@@ -270,7 +262,7 @@ describe( "halon", function() {
 					version: 2
 				} );
 
-				hc.onRejected( function( hc, err, handle ) {
+				hc.on( "rejected", function( hc, err, handle ) {
 					results.push( err );
 					if ( results.length > 4 ) {
 						handle.off();
@@ -280,15 +272,15 @@ describe( "halon", function() {
 								done();
 							} );
 					} else {
-						hc.start();
+						hc.connect().catch( function() {} );
 					}
-				}, true ).start();
+				}, true ).connect().catch( function() {} );
 			} );
 			it( "should invoke onReject callback with connection error", function() {
 				results[ 0 ].toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
 			} );
 			it( "should warn of the connection error", function() {
-				consoleStub.should.have.callCount( 6 );
+				consoleStub.should.have.callCount( 5 );
 			} );
 			it( "should reject API calls", function() {
 				actionResult.toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
@@ -307,7 +299,7 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var board;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -317,12 +309,13 @@ describe( "halon", function() {
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.board.self( { id: 101 } ).then( function( bd ) {
-						board = bd;
-						done();
+				return hc.connect()
+					.then( function( hc ) {
+						return hc.board.self( { id: 101 } )
+							.then( function( bd ) {
+								board = bd;
+							} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
@@ -360,7 +353,7 @@ describe( "halon", function() {
 		describe( "when invoking a root 'options' resource link that wasn't returned on the OPTIONS call", function() {
 			var hc;
 			var results = [];
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -369,9 +362,7 @@ describe( "halon", function() {
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					done();
-				} );
+				return hc.connect();
 			} );
 
 			it( "should throw an error", function() {
@@ -383,7 +374,7 @@ describe( "halon", function() {
 			var results = [];
 			var board;
 			var lanes;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -393,15 +384,15 @@ describe( "halon", function() {
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.board.self( { id: 101 } ).then( function( bd ) {
-						board = bd;
-						board.getLanes().then( function( l ) {
-							lanes = l;
-							done();
+				return hc.connect()
+					.then( function( hc ) {
+						return hc.board.self( { id: 101 } ).then( function( bd ) {
+							board = bd;
+							board.getLanes().then( function( l ) {
+								lanes = l;
+							} );
 						} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 4 ][ 0 ].should.eql( {
@@ -453,17 +444,16 @@ describe( "halon", function() {
 					"parentLaneId": null,
 					"activityId": "2"
 				};
-				before( function( done ) {
+				before( function() {
 					hc = halon( {
 						root: "http://localhost:8088/analytics/altapi",
 						adapter: adapterFactory( results ),
 						version: 3
 					} );
-					hc.onReady( function( hc ) {
-						hc.board.addLane( lane ).then( function() {
-							done();
+					return hc.connect()
+						.then( function( hc ) {
+							return hc.board.addLane( lane );
 						} );
-					} );
 				} );
 				it( "should pass expected arguments to the adapter", function() {
 					results[ 2 ][ 0 ].should.eql( {
@@ -485,22 +475,23 @@ describe( "halon", function() {
 					adapter: adapterFactory( results )
 				} );
 			} );
-			it( "should allow for parallel resource link invocations", function( done ) {
-				hc.onReady( function( hc ) {
-					hc(
-						hc.user.self( { id: 1 } ),
-						hc.board.self( { id: 101 } ),
-						hc.board.getCardTypes( { id: 101 } )
-					).then( function( responses ) {
-						var userReponse = responses[ 0 ];
-						var boardResponse = responses[ 1 ];
-						var cardTypesReponse = responses[ 2 ];
-						userReponse.should.eql( expectedUserResponse );
-						boardResponse.should.eql( expectedBoardResponse );
-						cardTypesReponse.should.eql( expectedCardTypeResponse );
-						done();
+
+			it( "should allow for parallel resource link invocations", function() {
+				return hc.connect()
+					.then( function( hc ) {
+						hc(
+							hc.user.self( { id: 1 } ),
+							hc.board.self( { id: 101 } ),
+							hc.board.getCardTypes( { id: 101 } )
+						).then( function( responses ) {
+							var userReponse = responses[ 0 ];
+							var boardResponse = responses[ 1 ];
+							var cardTypesReponse = responses[ 2 ];
+							userReponse.should.eql( expectedUserResponse );
+							boardResponse.should.eql( expectedBoardResponse );
+							cardTypesReponse.should.eql( expectedCardTypeResponse );
+						} );
 					} );
-				} );
 			} );
 		} );
 
@@ -508,7 +499,7 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var collection;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -517,12 +508,12 @@ describe( "halon", function() {
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.board.getCards( { id: 101 } ).then( function( result ) {
-						collection = result;
-						done();
+				return hc.connect()
+					.then( function( hc ) {
+						hc.board.getCards( { id: 101 } ).then( function( result ) {
+							collection = result;
+						} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
@@ -562,23 +553,23 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var list;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.package.list( {
-						project: "one",
-						build: 1,
-						version: "0.1.0"
-					} ).then( function( result ) {
-						list = result;
-						done();
+				hc.connect()
+					.then( function( hc ) {
+						hc.package.list( {
+							project: "one",
+							build: 1,
+							version: "0.1.0"
+						} ).then( function( result ) {
+							list = result;
+						} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
@@ -601,25 +592,25 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var list;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.package.getProject( {
-						"?": {
-							owner: "me",
-							build: 1,
-							version: "0.1.0"
-						}
-					} ).then( function( result ) {
-						list = result;
-						done();
+				hc.connect()
+					.then( function( hc ) {
+						hc.package.getProject( {
+							"?": {
+								owner: "me",
+								build: 1,
+								version: "0.1.0"
+							}
+						} ).then( function( result ) {
+							list = result;
+						} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
@@ -637,25 +628,25 @@ describe( "halon", function() {
 			var hc;
 			var results = [];
 			var list;
-			before( function( done ) {
+			before( function() {
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: adapterFactory( results ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.board.edit( {
-						id: 101,
-						body: [
-							{ op: "change", path: "title", value: "New Board Title" },
-							{ op: "change", path: "description", value: "This is a new description for the board" }
-						]
-					} ).then( function( result ) {
-						list = result;
-						done();
+				return hc.connect()
+					.then( function( hc ) {
+						hc.board.edit( {
+							id: 101,
+							body: [
+								{ op: "change", path: "title", value: "New Board Title" },
+								{ op: "change", path: "description", value: "This is a new description for the board" }
+							]
+						} ).then( function( result ) {
+							list = result;
+						} );
 					} );
-				} );
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
@@ -680,23 +671,23 @@ describe( "halon", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
-			before( function( done ) {
+			before( function() {
 				var hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: halon.requestAdapter( fauxRequest ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.package.upload( {
-						formData: {
-							"myFile.txt": { pretendFileStream: true }
-						}
-					} ).then( function( result ) {
-						resp = result;
-						done();
+				return hc.connect()
+					.then( function( hc ) {
+						hc.package.upload( {
+							formData: {
+								"myFile.txt": { pretendFileStream: true }
+							}
+						} ).then( function( result ) {
+							resp = result;
+						} );
 					} );
-				} );
 			} );
 			it( "should return an empty response", function() {
 				resp.should.eql( {} );
@@ -716,22 +707,22 @@ describe( "halon", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
-			before( function( done ) {
+			before( function() {
 				var hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: halon.requestAdapter( fauxRequest ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.elevated.gimme( {
-						this: "is a test",
-						for: "a json body"
-					} ).then( function( result ) {
-						resp = result;
-						done();
+				hc.connect()
+					.then( function( hc ) {
+						hc.elevated.gimme( {
+							this: "is a test",
+							for: "a json body"
+						} ).then( function( result ) {
+							resp = result;
+						} );
 					} );
-				} );
 			} );
 
 			it( "should return plain error message", function() {
@@ -757,20 +748,20 @@ describe( "halon", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
-			before( function( done ) {
+			before( function() {
 				var hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {},
 					adapter: halon.requestAdapter( fauxRequest ),
 					version: 3
 				} );
-				hc.onReady( function( hc ) {
-					hc.this.delete()
-						.then( function( result ) {
-							resp = result;
-							done();
-						} );
-				} );
+				return hc.connect()
+					.then( function( hc ) {
+						hc.this.delete()
+							.then( function( result ) {
+								resp = result;
+							} );
+					} );
 			} );
 
 			it( "should return an empty response", function() {
@@ -799,12 +790,13 @@ describe( "halon", function() {
 					root: "http://localhost:8088/analytics/not_exist",
 					knownOptions: {},
 					adapter: halon.requestAdapter( fauxRequest ),
-					version: 3
+					version: 3,
+					start: true
 				} );
 			} );
 
 			it( "should return an empty response", function( done ) {
-				hc.onRejected( function( client, err, listener ) {
+				hc.on( "rejected", function( client, err, listener ) {
 					err.should.match( /Not found/ );
 					listener.off();
 					done();
@@ -819,7 +811,7 @@ describe( "halon", function() {
 		describe( "when setting a default adapter", function() {
 			describe( "with no adapter passed into the factory", function() {
 				var fauxAdapter;
-				before( function( done ) {
+				before( function() {
 					fauxAdapter = sinon.stub().resolves( {} );
 					halon.defaultAdapter( fauxAdapter );
 
@@ -829,9 +821,7 @@ describe( "halon", function() {
 						version: 3
 					} );
 
-					hc.onReady( function() {
-						done();
-					} );
+					return hc.connect();
 				} );
 
 				it( "should use the default adapter", function() {
@@ -840,7 +830,7 @@ describe( "halon", function() {
 			} );
 			describe( "with an adapter passed into the factory", function() {
 				var fauxAdapter, overrideAdapter;
-				before( function( done ) {
+				before( function() {
 					fauxAdapter = sinon.stub().resolves( {} );
 					overrideAdapter = sinon.stub().resolves( {} );
 
@@ -853,9 +843,7 @@ describe( "halon", function() {
 						version: 3
 					} );
 
-					hc.onReady( function() {
-						done();
-					} );
+					return hc.connect();
 				} );
 
 				it( "should use the adapter passed into options", function() {
@@ -866,7 +854,7 @@ describe( "halon", function() {
 		} );
 		describe( "when using the jQuery adapter", function() {
 			var faux$;
-			before( function( done ) {
+			before( function() {
 				faux$ = {
 					ajax: sinon.stub().resolves( {} )
 				};
@@ -877,9 +865,7 @@ describe( "halon", function() {
 					adapter: halon.jQueryAdapter( faux$ )
 				} );
 
-				hc.onReady( function() {
-					done();
-				} );
+				return hc.connect();
 			} );
 
 			it( "should prepare the options for $.ajax", function() {
