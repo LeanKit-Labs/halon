@@ -15,19 +15,22 @@ var mocks = {
 	"http://localhost:8088/analytics/api/elevated/gimme": "User lacks sufficient permissions",
 	"http://localhost:8088/analytics/api/this/204": ""
 };
-var when = require( "when" );
 var adapter = function( resultsArray ) {
 	return function( link, data ) {
 		resultsArray.push( arguments );
 		var res;
 		res = mocks[ link.href ];
-		return when( res )
-			.then( function( resp ) {
-				if ( resultsArray ) {
-					resultsArray.push( resp );
-				}
-				return when( res );
-			} );
+		if ( mocks.hasOwnProperty( link.href ) ) {
+			return when( res )
+				.then( function( resp ) {
+					if ( resultsArray ) {
+						resultsArray.push( resp );
+					}
+					return when( res );
+				} );
+		} else {
+			return when.reject( new Error( "Not found" ) );
+		}
 	};
 };
 

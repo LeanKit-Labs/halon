@@ -1,4 +1,3 @@
-/*global halon, adapterFactory, expectedOptionsResponse, when, _, requestFactory, expectedOptionsResponse, expectedBoardResponse, expectedCardResponse, expectedCardTypeResponse, expectedUserResponse  */
 describe( "halon", function() {
 	describe( "when initializing a halon client", function() {
 		describe( "with no start delay", function() {
@@ -27,6 +26,11 @@ describe( "halon", function() {
 			it( "should create expected options structure on halon client instance", function() {
 				hc.should.have.property( "_actions" );
 				hc._links.should.eql( expectedOptionsResponse._links );
+			} );
+			it( "should immediately invoke onReady if already in a ready state", function() {
+				var callback = sinon.stub();
+				hc.onReady( callback );
+				callback.should.be.calledOnce;
 			} );
 		} );
 		describe( "with local root", function() {
@@ -255,7 +259,9 @@ describe( "halon", function() {
 			var hc;
 			var actionResult;
 			var results = [];
+			var consoleStub;
 			before( function( done ) {
+				consoleStub = sinon.stub( console, "warn" ); // Silence console output
 				hc = halon( {
 					root: "http://localhost:8088/analytics/api",
 					knownOptions: {
@@ -284,11 +290,17 @@ describe( "halon", function() {
 			it( "should invoke onReject callback with connection error", function() {
 				results[ 0 ].toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
 			} );
+			it( "should warn of the connection error", function() {
+				consoleStub.should.have.callCount( 6 );
+			} );
 			it( "should reject API calls", function() {
 				actionResult.toString().should.equal( "Error: Server can't talk right now, hazza sad :(" );
 			} );
 			it( "should attempt connection again if 'start' is called", function() {
 				results.length.should.equal( 5 );
+			} );
+			after( function() {
+				consoleStub.restore();
 			} );
 		} );
 	} );
@@ -328,13 +340,13 @@ describe( "halon", function() {
 				} );
 			} );
 			it( "should create _actions on returned resource", function() {
-				( typeof board._actions.self ).should.equal( "function" );
-				( typeof board._actions.minimal ).should.equal( "function" );
-				( typeof board._actions.users ).should.equal( "function" );
-				( typeof board._actions.cards ).should.equal( "function" );
-				( typeof board._actions.cardTypes ).should.equal( "function" );
-				( typeof board._actions.classesOfService ).should.equal( "function" );
-				( typeof board._actions.lanes ).should.equal( "function" );
+				board._actions.self.should.be.a( "function" );
+				board._actions.minimal.should.be.a( "function" );
+				board._actions.users.should.be.a( "function" );
+				board._actions.cards.should.be.a( "function" );
+				board._actions.cardTypes.should.be.a( "function" );
+				board._actions.classesOfService.should.be.a( "function" );
+				board._actions.lanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id", "title", "description", "classOfServiceEnabled", "organizationId", "laneTypes", "laneClassTypes", "tags", "priorities" ];
@@ -346,6 +358,27 @@ describe( "halon", function() {
 				_.each( expectedBoardResponse.embedded, function( val, key ) {
 					board[ key ].should.eql( val );
 				} );
+			} );
+		} );
+		describe( "when invoking a root 'options' resource link that wasn't returned on the OPTIONS call", function() {
+			var hc;
+			var results = [];
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {
+						board: [ "shouldFail" ]
+					},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				hc.onReady( function( hc ) {
+					done();
+				} );
+			} );
+
+			it( "should throw an error", function() {
+				return hc._actions.board.shouldFail().should.be.rejectedWith( /No link definition/ );
 			} );
 		} );
 		describe( "when following a rel link on a returned resource", function() {
@@ -381,12 +414,12 @@ describe( "halon", function() {
 				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
 			it( "should create _actions on returned resource", function() {
-				( typeof lanes._actions.self ).should.equal( "function" );
-				( typeof lanes._actions.minimal ).should.equal( "function" );
-				( typeof lanes._actions.users ).should.equal( "function" );
-				( typeof lanes._actions.cardTypes ).should.equal( "function" );
-				( typeof lanes._actions.classesOfService ).should.equal( "function" );
-				( typeof lanes._actions.lanes ).should.equal( "function" );
+				lanes._actions.self.should.be.a( "function" );
+				lanes._actions.minimal.should.be.a( "function" );
+				lanes._actions.users.should.be.a( "function" );
+				lanes._actions.cardTypes.should.be.a( "function" );
+				lanes._actions.classesOfService.should.be.a( "function" );
+				lanes._actions.lanes.should.be.a( "function" );
 			} );
 			it( "should return expected resource data", function() {
 				var propsToCheck = [ "_links", "id" ];
@@ -508,9 +541,9 @@ describe( "halon", function() {
 			} );
 			it( "should create _actions on returned resources", function() {
 				_.each( collection.cards, function( card ) {
-					( typeof card._actions.self ).should.equal( "function" );
-					( typeof card._actions.block ).should.equal( "function" );
-					( typeof card._actions.move ).should.equal( "function" );
+					card._actions.self.should.be.a( "function" );
+					card._actions.block.should.be.a( "function" );
+					card._actions.move.should.be.a( "function" );
 				} );
 			} );
 			it( "should return expected number of resources", function() {
@@ -620,7 +653,7 @@ describe( "halon", function() {
 				} );
 				hc.onReady( function( hc ) {
 					hc._actions.board.edit( {
-						id: 100,
+						id: 101,
 						body: [
 							{ op: "change", path: "title", value: "New Board Title" },
 							{ op: "change", path: "description", value: "This is a new description for the board" }
@@ -633,7 +666,7 @@ describe( "halon", function() {
 			} );
 			it( "should pass expected arguments to the adapter", function() {
 				results[ 2 ][ 0 ].should.eql( {
-					href: "/analytics/api/board/100",
+					href: "/analytics/api/board/101",
 					method: "PATCH",
 					templated: true
 				} );
@@ -758,6 +791,111 @@ describe( "halon", function() {
 					headers: {
 						Accept: "application/hal.v3+json"
 					}
+				} );
+			} );
+		} );
+		describe( "when processing failed responses (404)", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			var consoleStub;
+			var hc;
+			before( function() {
+				consoleStub = sinon.stub( console, "warn" ); // Silence console output
+				hc = halon( {
+					root: "http://localhost:8088/analytics/not_exist",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3
+				} );
+			} );
+
+			it( "should return an empty response", function( done ) {
+				hc.onRejected( function( client, err, listener ) {
+					err.should.match( /Not found/ );
+					listener.off();
+					done();
+				} );
+			} );
+			after( function() {
+				consoleStub.restore();
+			} );
+		} );
+	} );
+	describe( "when using adapters", function() {
+		describe( "when setting a default adapter", function() {
+			describe( "with no adapter passed into the factory", function() {
+				var fauxAdapter;
+				before( function( done ) {
+					fauxAdapter = sinon.stub().resolves( {} );
+					halon.defaultAdapter( fauxAdapter );
+
+					var hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {},
+						version: 3
+					} );
+
+					hc.onReady( function() {
+						done();
+					} );
+				} );
+
+				it( "should use the default adapter", function() {
+					fauxAdapter.should.be.calledOnce;
+				} );
+			} );
+			describe( "with an adapter passed into the factory", function() {
+				var fauxAdapter, overrideAdapter;
+				before( function( done ) {
+					fauxAdapter = sinon.stub().resolves( {} );
+					overrideAdapter = sinon.stub().resolves( {} );
+
+					halon.defaultAdapter( fauxAdapter );
+
+					var hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						knownOptions: {},
+						adapter: overrideAdapter,
+						version: 3
+					} );
+
+					hc.onReady( function() {
+						done();
+					} );
+				} );
+
+				it( "should use the adapter passed into options", function() {
+					overrideAdapter.should.be.calledOnce;
+					fauxAdapter.should.not.be.called;
+				} );
+			} );
+		} );
+		describe( "when using the jQuery adapter", function() {
+			var faux$;
+			before( function( done ) {
+				faux$ = {
+					ajax: sinon.stub().resolves( {} )
+				};
+
+				var hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					version: 3,
+					adapter: halon.jQueryAdapter( faux$ )
+				} );
+
+				hc.onReady( function() {
+					done();
+				} );
+			} );
+
+			it( "should prepare the options for $.ajax", function() {
+				faux$.ajax.should.be.calledOnce.and.calledWith( {
+					url: "http://localhost:8088/analytics/api",
+					type: "OPTIONS",
+					headers: { Accept: "application/hal.v3+json" },
+					dataType: "json",
+					data: undefined
 				} );
 			} );
 		} );

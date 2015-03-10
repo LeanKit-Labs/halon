@@ -15,14 +15,22 @@ var banner = [ "/**",
 	" */",
 "" ].join( "\n" );
 
-gulp.task( "default", function() {
+function buildLib() {
 	return gulp.src( "src/halon.js" )
 		.pipe( hintNot() )
 		.pipe( sourcemaps.init() )
 		.pipe( header( banner, {
 			pkg: pkg
 		} ) )
-		.pipe( gulp.dest( "lib/" ) )
+		.pipe( gulp.dest( "lib/" ) );
+}
+
+gulp.task( "build:quick", function() {
+	return buildLib();
+} );
+
+gulp.task( "build:minified", function() {
+	return buildLib()
 		.pipe( header( banner, {
 			pkg: pkg
 		} ) )
@@ -38,6 +46,8 @@ gulp.task( "default", function() {
 		.pipe( rename( "halon.min.js" ) )
 		.pipe( gulp.dest( "lib/" ) );
 } );
+
+gulp.task( "default", [ "build:minified" ] );
 
 var mocha = require( "gulp-spawn-mocha" );
 gulp.task( "mocha", function() {

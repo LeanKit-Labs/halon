@@ -6,6 +6,9 @@
  * Request adapter should not send empty JSON body
  * Add support for submitting arrays as the body of an action
  * Bug fix - don't check empty body for starting { in request adapter
+ * Attempting to follow a `knownOption` that does not actually exist after the initial `OPTIONS` call should throw an error
+ * Setting `defaultAdapter` now works
+
 
 ### 0.0.2
  * Add `onRejected` handler for managing connectivity issues

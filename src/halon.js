@@ -1,6 +1,7 @@
 /* global require, module */
 /* jshint -W098 */
 ( function( root, factory ) {
+	/* istanbul ignore next - Not testing the UMD */
 	if ( typeof define === "function" && define.amd ) {
 		// AMD. Register as an anonymous module.
 		define( [ "machina", "lodash", "when", "URIjs", "URITemplate" ], factory );
@@ -104,7 +105,7 @@
 	function processKnownOptions( knownOptions ) {
 		var x = _.reduce( knownOptions, function( memo, rels, resource ) {
 			rels.forEach( function( rel ) {
-				memo._links[ resource + ":" + rel ] = {};
+				memo._links[ resource + ":" + rel ] = undefined;
 			} );
 			return memo;
 		}, { _links: {} } );
@@ -178,14 +179,16 @@
 		}
 	} );
 
-	var defaults = {
-		version: 1,
-		knownOptions: {},
-		adapter: _defaultAdapter,
-		headers: {}
-	};
 
 	var halonFactory = function( options ) {
+
+		var defaults = {
+			version: 1,
+			knownOptions: {},
+			adapter: _defaultAdapter,
+			headers: {}
+		};
+
 		var client = function halonInstance() {
 			var args = Array.prototype.slice.call( arguments, 0 );
 			return when.all( args );
@@ -270,7 +273,7 @@
 			};
 			if ( formData ) {
 				requestOptions.formData = formData;
-			} else if( json && !_.isEmpty( json ) ) {
+			} else if ( json && !_.isEmpty( json ) ) {
 				requestOptions.json = json;
 				requestOptions.headers[ "Content-Type" ] = "application/json";
 			}

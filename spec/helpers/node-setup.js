@@ -2,7 +2,12 @@ global.halon = require( "../../lib/halon.js" );
 global.adapterFactory = require( "../adapterStub.js" );
 global.requestFactory = require( "../requestStub.js" );
 require( "mocha" );
-global.should = require( "should" ); //jshint ignore:line
+global.sinon = require( "sinon" );
+require( "sinon-as-promised" );
+var chai = require( "chai" );
+chai.use( require( "sinon-chai" ) );
+chai.use( require( "chai-as-promised" ) );
+global.should = chai.should();
 global.expectedOptionsResponse = require( "../mockResponses/options.json" );
 global.expectedBoardResponse = require( "../mockResponses/board101.json" );
 global.expectedCardResponse = require( "../mockResponses/board101cards.json" );
