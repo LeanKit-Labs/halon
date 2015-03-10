@@ -336,7 +336,7 @@ describe( "halon", function() {
 					server: "http://localhost:8088"
 				} );
 			} );
-			it( "should create _actions on returned resource", function() {
+			it( "should create actions on returned resource", function() {
 				board.self.should.be.a( "function" );
 				board.minimal.should.be.a( "function" );
 				board.getUsers.should.be.a( "function" );
@@ -410,7 +410,7 @@ describe( "halon", function() {
 				} );
 				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
-			it( "should create _actions on returned resource", function() {
+			it( "should create actions on returned resource", function() {
 				lanes.self.should.be.a( "function" );
 				lanes.minimal.should.be.a( "function" );
 				lanes.getUsers.should.be.a( "function" );
@@ -495,10 +495,6 @@ describe( "halon", function() {
 						var userReponse = responses[ 0 ];
 						var boardResponse = responses[ 1 ];
 						var cardTypesReponse = responses[ 2 ];
-						// remove the _actions prop so we can do an `eql` comparison
-						delete userReponse;
-						delete boardResponse;
-						delete cardTypesReponse;
 						userReponse.should.eql( expectedUserResponse );
 						boardResponse.should.eql( expectedBoardResponse );
 						cardTypesReponse.should.eql( expectedCardTypeResponse );
@@ -536,7 +532,7 @@ describe( "halon", function() {
 				} );
 				results[ 2 ][ 1 ].should.eql( { data: { id: 101 }, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
 			} );
-			it( "should create _actions on returned resources", function() {
+			it( "should create actions on returned resources", function() {
 				_.each( collection.cards, function( card ) {
 					card.self.should.be.a( "function" );
 					card.block.should.be.a( "function" );
