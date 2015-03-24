@@ -1,6 +1,6 @@
 ## 0.0.*
 
-### Current
+### 0.0.3
  * Changed `start` to `connect` which now returns a promise
  * Changed onReady/onReject callbacks to simple `on` event handlers
  * Changed automatic connection behavior to opt-in (vs. opt-out)
@@ -12,6 +12,7 @@
  * Bug fix - don't check empty body for starting { in request adapter
  * Attempting to follow a `knownOption` that does not actually exist after the initial `OPTIONS` call should throw an error
  * Setting `defaultAdapter` now works
+ * Removed version from README. Set machina version to 1.x
 
 
 ### 0.0.2
