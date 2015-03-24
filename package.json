@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git://github.com/LeanKit-Labs/halon.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "contributors": [
     {
       "name": "Jim Cowart",
@@ -39,7 +42,7 @@
   "dependencies": {
     "URIjs": "^1.14.1",
     "lodash": "3.x",
-    "machina": "^1.0.0-1",
+    "machina": "1.x",
     "when": "3.x"
   },
   "devDependencies": {
@@ -52,7 +55,7 @@
     "gulp-sourcemaps": "^1.5.0",
     "gulp-spawn-mocha": "^2.0.1",
     "gulp-uglify": "^1.1.0",
-    "istanbul": "^0.3.7",
+    "istanbul": "^0.3.10",
     "mocha": "^2.2.0",
     "sinon": "^1.13.0",
     "sinon-as-promised": "^2.0.3",

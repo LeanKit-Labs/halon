@@ -1,4 +1,4 @@
-# halon v0.1.0
+# halon
 
 ## Obligatory Disclaimer
 This project is not stable yet - expect *lots* of change. Don't say we didn't warn you. :-)
