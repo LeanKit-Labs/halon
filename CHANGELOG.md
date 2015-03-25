@@ -1,6 +1,6 @@
 ## 0.0.*
 
-### 0.0.3
+### 0.1.0
  * Changed `start` to `connect` which now returns a promise
  * Changed onReady/onReject callbacks to simple `on` event handlers
  * Changed automatic connection behavior to opt-in (vs. opt-out)
