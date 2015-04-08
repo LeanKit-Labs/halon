@@ -1,6 +1,6 @@
 {
   "name": "halon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/LeanKit-Labs/halon",
   "description": "JavaScript Hypermedia Client",
   "author": "LeanKit",
@@ -25,6 +25,10 @@
       "name": "Doug Neiner",
       "email": "doug@dougneiner.com",
       "url": "http://code.dougneiner.com"
+    },
+    {
+      "name": "Ryan Niemeyer",
+      "url": "http://knockmeout.net"
     }
   ],
   "main": "./lib/halon.js",

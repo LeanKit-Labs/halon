@@ -1,6 +1,6 @@
-## 0.0.*
+## 0.2.*
 
-### Current
+### 0.2.0
  * jQuery adapter now will JSON stringify data and add `application/json` Content-Type when data is present. If data is already a string it will be left alone.
 
 ### 0.1.0
