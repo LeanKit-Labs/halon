@@ -1,6 +1,6 @@
 ## 0.2.*
 
-### Current
+### 0.2.1
  * jQuery adapter now conditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
 
 ### 0.2.0
