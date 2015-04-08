@@ -1,5 +1,8 @@
 ## 0.2.*
 
+### Current
+ * jQuery adapter now conditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
+
 ### 0.2.0
  * jQuery adapter now will JSON stringify data and add `application/json` Content-Type when data is present. If data is already a string it will be left alone.
 
