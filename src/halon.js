@@ -265,15 +265,17 @@
 	};
 
 	halonFactory.jQueryAdapter = function( $ ) {
+		var autoStringify = [ "PATCH", "POST", "PUT" ];
 		return function( link, options ) {
 			var ajaxDef = {
 				url: link.href,
 				type: link.method,
 				headers: options.headers,
-				dataType: "json"
+				dataType: "json",
+				data: options.data
 			};
 
-			if ( options.data ) {
+			if ( options.data && _.contains( autoStringify, link.method.toUpperCase() ) ) {
 				ajaxDef.data = typeof options.data === "string" ? options.data : JSON.stringify( options.data );
 				ajaxDef.contentType = "application/json";
 			}
