@@ -266,13 +266,19 @@
 
 	halonFactory.jQueryAdapter = function( $ ) {
 		return function( link, options ) {
-			return $.ajax( {
+			var ajaxDef = {
 				url: link.href,
 				type: link.method,
 				headers: options.headers,
-				dataType: "json",
-				data: options.data
-			} );
+				dataType: "json"
+			};
+
+			if ( options.data ) {
+				ajaxDef.data = typeof options.data === "string" ? options.data : JSON.stringify( options.data );
+				ajaxDef.contentType = "application/json";
+			}
+
+			return $.ajax( ajaxDef );
 		};
 	};
 
