@@ -856,7 +856,7 @@ describe( "halon", function() {
 			var faux$;
 			before( function() {
 				faux$ = {
-					ajax: sinon.stub().resolves( {} )
+					ajax: sinon.stub().resolves( require( "./mockResponses/options.json" ) )
 				};
 
 				var hc = halon( {
@@ -865,16 +865,51 @@ describe( "halon", function() {
 					adapter: halon.jQueryAdapter( faux$ )
 				} );
 
-				return hc.connect();
+				return hc.connect().then( function( hc ) {
+					return hc.elevated.gimme( {
+						this: "is a test",
+						for: "a json body"
+					} ).then( function() {
+						return hc.elevated.gimme( "string" );
+					} );
+				} )
 			} );
 
 			it( "should prepare the options for $.ajax", function() {
-				faux$.ajax.should.be.calledOnce.and.calledWith( {
+				faux$.ajax.firstCall.should.be.calledWith( {
 					url: "http://localhost:8088/analytics/api",
 					type: "OPTIONS",
 					headers: { Accept: "application/hal.v3+json" },
+					dataType: "json"
+				} );
+			} );
+
+			it( "should prepare JSON data when included", function() {
+				faux$.ajax.secondCall.should.be.calledWith( {
+					type: "POST",
+					url: "/analytics/api/elevated/gimme",
+					headers: {
+						Accept: "application/hal.v3+json"
+					},
+					contentType: "application/json",
 					dataType: "json",
-					data: undefined
+					data: JSON.stringify( {
+						this: "is a test",
+						for: "a json body"
+					} )
+				} );
+			} );
+
+			it( "should not attempt to JSON encode a string", function() {
+				faux$.ajax.thirdCall.should.be.calledWith( {
+					type: "POST",
+					url: "/analytics/api/elevated/gimme",
+					headers: {
+						Accept: "application/hal.v3+json"
+					},
+					contentType: "application/json",
+					dataType: "json",
+					data: "string"
 				} );
 			} );
 		} );
