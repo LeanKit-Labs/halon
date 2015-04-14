@@ -884,6 +884,35 @@ describe( "halon", function() {
 				} );
 			} );
 
+			describe( "with failure", function() {
+				var hc;
+				before( function() {
+					sinon.stub( console, "warn" );
+
+					var ajaxStub = sinon.stub().returns( {
+						then: function( res, rej ) {
+							rej( "one", "two", "three" );
+						}
+					} );
+
+					faux$ = {
+						ajax: ajaxStub
+					};
+
+					hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						version: 3,
+						adapter: halon.jQueryAdapter( faux$ )
+					} );
+				} );
+				after( function() {
+					console.warn.restore();
+				} );
+				it( "should pass jQuery err argument to reject handler", function() {
+					return hc.connect().should.eventually.be.rejectedWith( "three" );
+				} );
+			} );
+
 			describe( "when making a POST request", function() {
 				before( function() {
 					var ajaxStub = sinon.stub();
@@ -972,7 +1001,7 @@ describe( "halon", function() {
 						dataType: "json",
 						data: { id: 101 }
 					} );
-				} )
+				} );
 			} );
 		} );
 	} );
