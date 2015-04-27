@@ -5,6 +5,9 @@ var header = require( "gulp-header" );
 var pkg = require( "./package.json" );
 var hintNot = require( "gulp-hint-not" );
 var uglify = require( "gulp-uglify" );
+var jshint = require( "gulp-jshint" );
+var jscs = require( "gulp-jscs" );
+var gulpChanged = require( "gulp-changed" );
 
 var banner = [ "/**",
 	" * <%= pkg.name %> - <%= pkg.description %>",
@@ -29,7 +32,7 @@ gulp.task( "build:quick", function() {
 	return buildLib();
 } );
 
-gulp.task( "build:minified", function() {
+gulp.task( "build:minified", [ "format" ], function() {
 	return buildLib()
 		.pipe( header( banner, {
 			pkg: pkg
@@ -60,6 +63,23 @@ gulp.task( "mocha", function() {
 			debug: false
 		} ) )
 		.on( "error", console.warn.bind( console ) );
+} );
+
+gulp.task( "jshint", function() {
+	return gulp.src( [ "src/**/*.js", "spec/**/*.spec.js" ] )
+		.pipe( jshint() )
+		.pipe( jshint.reporter( "jshint-stylish" ) )
+		.pipe( jshint.reporter( "fail" ) );
+} );
+
+gulp.task( "format", [ "jshint" ], function() {
+	return gulp.src( [ "**/*.js", "!node_modules/**" ] )
+		.pipe( jscs( {
+			configPath: ".jscsrc",
+			fix: true
+		} ) )
+		.pipe( gulpChanged( ".", { hasChanged: gulpChanged.compareSha1Digest } ) )
+		.pipe( gulp.dest( "." ) );
 } );
 
 gulp.task( "watch", function() {
