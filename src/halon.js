@@ -18,7 +18,6 @@
 		throw new Error( "Sorry - halon only supports AMD or CommonJS module environments." );
 	}
 }( this, function( machina, _, when, URI, URITemplate ) {
-
 	var _defaultAdapter;
 
 	function expandLink( action, data ) {
@@ -123,7 +122,7 @@
 
 		states: {
 			uninitialized: {
-				"connect": "initializing",
+				connect: "initializing",
 				"invoke.resource": function() {
 					this.deferUntilTransition( "ready" );
 				}
@@ -179,7 +178,7 @@
 						this.client.deferred = undefined;
 					}
 				},
-				"connect": "initializing",
+				connect: "initializing",
 				"invoke.resource": function( resource, rel, data, headers, success, err ) {
 					err( this.connectionError );
 				}
@@ -191,9 +190,7 @@
 		}
 	} );
 
-
 	var halonFactory = function( options ) {
-
 		var defaults = {
 			version: 1,
 			knownOptions: {},
@@ -330,5 +327,4 @@
 	};
 
 	return halonFactory;
-
-} ));
+} ) );

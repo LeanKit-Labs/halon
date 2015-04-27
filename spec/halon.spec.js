@@ -427,22 +427,22 @@ describe( "halon", function() {
 				var hc;
 				var results = [];
 				var lane = {
-					"id": "307",
-					"name": "Lane 3",
-					"description": "Lane 3 Description",
-					"laneClassTypeId": 0,
-					"laneTypeId": 3,
-					"active": true,
-					"cardLimit": [
+					id: "307",
+					name: "Lane 3",
+					description: "Lane 3 Description",
+					laneClassTypeId: 0,
+					laneTypeId: 3,
+					active: true,
+					cardLimit: [
 						5,
 						5
 					],
-					"creationDate": "2009-08-19T01:37:16.000Z",
-					"index": 2,
-					"boardId": "101",
-					"taksBoardId": null,
-					"parentLaneId": null,
-					"activityId": "2"
+					creationDate: "2009-08-19T01:37:16.000Z",
+					index: 2,
+					boardId: "101",
+					taskBoardId: null,
+					parentLaneId: null,
+					activityId: "2"
 				};
 				before( function() {
 					hc = halon( {
@@ -967,7 +967,6 @@ describe( "halon", function() {
 						data: "string"
 					} );
 				} );
-
 			} );
 
 			describe( "when making a non POST, PUT or PATCH request", function() {
