@@ -279,7 +279,9 @@
 
 			return when.promise( function( resolve, reject ) {
 				$.ajax( ajaxDef )
-					.then( resolve, function( jqXhr, respText, err ) {
+					.then( resolve, function( jqXhr, respText, e ) {
+						var err = new Error( e );
+						err.status = jqXhr.status;
 						reject( err );
 					} );
 			} );
