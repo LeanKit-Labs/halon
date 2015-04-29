@@ -1,7 +1,12 @@
-## 0.2.*
+### 0.3.1
+ * Added status code to halon error
+ * Add jscs and jshint to build
+
+### 0.3.0
+ * Updated jQuery adapter to pass error argument instead of jqXHR arg to rejection handler
 
 ### 0.2.1
- * jQuery adapter now conditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
+ * jQuery adapter now prconditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
 
 ### 0.2.0
  * jQuery adapter now will JSON stringify data and add `application/json` Content-Type when data is present. If data is already a string it will be left alone.
