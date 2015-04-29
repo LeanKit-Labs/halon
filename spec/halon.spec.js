@@ -891,7 +891,7 @@ describe( "halon", function() {
 
 					var ajaxStub = sinon.stub().returns( {
 						then: function( res, rej ) {
-							rej( "one", "two", "three" );
+							rej( { status: 404 }, "other", "Forbidden" );
 						}
 					} );
 
@@ -908,8 +908,12 @@ describe( "halon", function() {
 				after( function() {
 					console.warn.restore();
 				} );
-				it( "should pass jQuery err argument to reject handler", function() {
-					return hc.connect().should.eventually.be.rejectedWith( "three" );
+				it( "should pass jQuery err argument to reject handler", function( done ) {
+					hc.connect().then( null, function( err ) {
+						err.toString().should.match( /Forbidden/ );
+						err.status.should.equal( 404 );
+						done();
+					} );
 				} );
 			} );
 
