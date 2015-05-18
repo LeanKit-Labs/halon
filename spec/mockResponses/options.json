@@ -197,6 +197,10 @@
         "this:delete": {
             "href": "http://localhost:8088/analytics/api/this/204",
             "method": "DELETE"
+        },
+        "bad:request": {
+            "href": "http://localhost:8088/analytics/bad/request",
+            "method": "GET"
         }
     },
     "_mediaTypes": [

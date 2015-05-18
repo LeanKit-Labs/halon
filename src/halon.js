@@ -314,14 +314,20 @@
 			}
 			return when.promise( function( resolve, reject ) {
 				request( requestOptions, function( err, resp, body ) {
+					var json;
+					if ( body && body[ 0 ] === "{" ) {
+						var isJson = body && body !== "" && body !== "{}";
+						json = isJson ? JSON.parse( body ) : {};
+						json.status = resp.statusCode;
+					} else if ( body ) {
+						body.status = resp.statusCode;
+					}
 					if ( err ) {
 						reject( err );
-					} else if ( body && body[ 0 ] === "{" ) {
-						var isJson = body && body !== "" && body !== "{}";
-						var json = isJson ? JSON.parse( body ) : {};
-						resolve( json );
+					} else if ( resp.statusCode >= 400 ) {
+						reject( json || body );
 					} else {
-						resolve( body );
+						resolve( json || body );
 					}
 				} );
 			} );
