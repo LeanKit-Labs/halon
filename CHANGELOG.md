@@ -1,4 +1,6 @@
 ### Current
+
+### 0.3.2
  * Update request adapter to reject request promise on status codes >= 400
  * Include status code as part of rejected promise for request adapter
 
