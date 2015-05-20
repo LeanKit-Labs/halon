@@ -224,6 +224,9 @@ form[ "myFile.txt" ] = fs.createReadStream( "/path/to/myFile.txt" );
 client.file.upload( { formData: form } );
 ```
 
+__Rejection based on status code__
+Requests will be rejected if the status code is greater than or equal to 400. The status code will be attached to the error message as `status`.
+
 ## Specifying Custom Headers
 
 Halon will always provide an `Accept` header value for you, but you can provide your own headers to be sent along with every request (at the client level) and/or at the resource level:

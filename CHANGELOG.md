@@ -1,3 +1,7 @@
+### Current
+ * Update request adapter to reject request promise on status codes >= 400
+ * Include status code as part of rejected promise for request adapter
+
 ### 0.3.1
  * Added status code to halon error
  * Add jscs and jshint to build

@@ -690,7 +690,7 @@ describe( "halon", function() {
 					} );
 			} );
 			it( "should return an empty response", function() {
-				resp.should.eql( {} );
+				resp.should.eql( "" );
 			} );
 
 			it( "should create options with formData property", function() {
@@ -778,7 +778,8 @@ describe( "halon", function() {
 				} );
 			} );
 		} );
-		describe( "when processing failed responses (404)", function() {
+
+		describe( "when root api is missing (404)", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
@@ -801,6 +802,37 @@ describe( "halon", function() {
 					listener.off();
 					done();
 				} );
+			} );
+			after( function() {
+				consoleStub.restore();
+			} );
+		} );
+
+		describe( "when response is >= 400", function() {
+			var results = [];
+			var resp;
+			var fauxRequest = requestFactory( adapterFactory( results ) );
+			var consoleStub;
+			var hc;
+			var client;
+			before( function() {
+				consoleStub = sinon.stub( console, "warn" ); // Silence console output
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: halon.requestAdapter( fauxRequest ),
+					version: 3,
+					start: true
+				} );
+				return hc
+					.connect()
+					.then( function( c ) {
+						client = c;
+					} );
+			} );
+			it( "should reject 4xx status code", function() {
+				return client.bad.request()
+					.should.eventually.be.rejectedWith( { message: "Don't do that again.", status: 404 } );
 			} );
 			after( function() {
 				consoleStub.restore();
