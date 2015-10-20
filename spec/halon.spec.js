@@ -422,6 +422,56 @@ describe( "halon", function() {
 			} );
 		} );
 
+		describe( "when following a rel link via the followLink method", function() {
+			var hc;
+			var results = [];
+			var board;
+			var lanes;
+			before( function() {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {},
+					adapter: adapterFactory( results ),
+					version: 3
+				} );
+				return hc.connect()
+					.then( function( hc ) {
+						return hc.board.self( { id: 101 } ).then( function( bd ) {
+							board = bd;
+							return hc.followResourceLink( board, "getLanes" ).then( function( l ) {
+								lanes = l;
+							} );
+						} );
+					} );
+			} );
+			it( "should pass expected arguments to the adapter", function() {
+				results[ 4 ][ 0 ].should.eql( {
+					href: "/analytics/api/board/101/lane",
+					method: "GET"
+				} );
+				results[ 4 ][ 1 ].should.eql( { data: {}, headers: { Accept: "application/hal.v3+json" }, server: "http://localhost:8088" } );
+			} );
+			it( "should create actions on returned resource", function() {
+				lanes.self.should.be.a( "function" );
+				lanes.minimal.should.be.a( "function" );
+				lanes.getUsers.should.be.a( "function" );
+				lanes.getCardTypes.should.be.a( "function" );
+				lanes.getClassesOfService.should.be.a( "function" );
+				lanes.getLanes.should.be.a( "function" );
+			} );
+			it( "should return expected resource data", function() {
+				var propsToCheck = [ "_links", "id" ];
+				_.each( expectedBoardResponse, function( val, key ) {
+					if ( propsToCheck.indexOf( key ) !== -1 ) {
+						val.should.eql( board[ key ] );
+					}
+				} );
+				_.each( expectedBoardResponse.embedded, function( val, key ) {
+					board[ key ].should.eql( val );
+				} );
+			} );
+		} );
+
 		describe( "when using verbs that can have a request body", function() {
 			describe( "when using PUT", function() {
 				var hc;

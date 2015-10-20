@@ -119,7 +119,9 @@
 				this
 			) );
 		},
-
+		followResourceLink: function( res, key, data, headers ) {
+			return invokeResource.call( res, this, key, data, headers );
+		},
 		states: {
 			uninitialized: {
 				connect: "initializing",
@@ -226,6 +228,8 @@
 				} );
 			} );
 		};
+
+		client.followResourceLink = client.fsm.followResourceLink.bind( client.fsm );
 
 		client.on = function( eventName, cb, persist ) {
 			if ( eventName === "ready" ) {
