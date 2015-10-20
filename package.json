@@ -1,6 +1,6 @@
 {
   "name": "halon",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "https://github.com/LeanKit-Labs/halon",
   "description": "JavaScript Hypermedia Client",
   "author": "LeanKit",
@@ -44,7 +44,7 @@
     "show-coverage": "open ./coverage/lcov-report/index.html"
   },
   "dependencies": {
-    "URIjs": "^1.14.1",
+    "urijs": "^1.14.1",
     "lodash": "3.x",
     "machina": "1.x",
     "when": "3.x"
