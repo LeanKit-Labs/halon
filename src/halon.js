@@ -4,15 +4,15 @@
 	/* istanbul ignore next - Not testing the UMD */
 	if ( typeof define === "function" && define.amd ) {
 		// AMD. Register as an anonymous module.
-		define( [ "machina", "lodash", "when", "URIjs", "URITemplate" ], factory );
+		define( [ "machina", "lodash", "when", "urijs", "URITemplate" ], factory );
 	} else if ( typeof module === "object" && module.exports ) {
 		// Node, or CommonJS-Like environments
 		module.exports = factory(
 			require( "machina" ),
 			require( "lodash" ),
 			require( "when" ),
-			require( "URIjs" ),
-			require( "URIjs/src/URITemplate" )
+			require( "urijs" ),
+			require( "urijs/src/URITemplate" )
 		);
 	} else {
 		throw new Error( "Sorry - halon only supports AMD or CommonJS module environments." );
