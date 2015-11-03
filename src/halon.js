@@ -4,7 +4,7 @@
 	/* istanbul ignore next - Not testing the UMD */
 	if ( typeof define === "function" && define.amd ) {
 		// AMD. Register as an anonymous module.
-		define( [ "machina", "lodash", "when", "urijs", "URITemplate" ], factory );
+		define( [ "machina", "lodash", "when", "urijs", "urijs/src/URITemplate" ], factory );
 	} else if ( typeof module === "object" && module.exports ) {
 		// Node, or CommonJS-Like environments
 		module.exports = factory(
