@@ -1,5 +1,8 @@
 ### Current
 
+### 0.3.5
+Fix AMD path to URITemplate
+
 ### 0.3.4
 Correct an issue with case sensitivity regarding urijs dependency
 
