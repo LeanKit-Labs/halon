@@ -1,5 +1,9 @@
 ### Current
 
+### 0.3.6
+* Adding custom LinkMissingError for when a known option is missing its link.
+* Fixes issue where a missing link error could not be handled as a promise rejection.
+
 ### 0.3.5
 Fix AMD path to URITemplate
 

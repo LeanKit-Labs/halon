@@ -1,6 +1,6 @@
 {
   "name": "halon",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "homepage": "https://github.com/LeanKit-Labs/halon",
   "description": "JavaScript Hypermedia Client",
   "author": "LeanKit",
@@ -29,6 +29,10 @@
     {
       "name": "Ryan Niemeyer",
       "url": "http://knockmeout.net"
+    },
+    {
+      "name": "Brian Edgerton",
+      "email": "brian.edgerton@leankit.com"
     }
   ],
   "main": "./lib/halon.js",
