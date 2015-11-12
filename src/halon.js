@@ -20,6 +20,16 @@
 }( this, function( machina, _, when, URI, URITemplate ) {
 	var _defaultAdapter;
 
+	function LinkMissingError( msg, rel ) {
+		this.name = "LinkMissingError";
+		this.message = msg;
+		this.link = rel;
+		this.stack = ( new Error() ).stack;
+	}
+
+	LinkMissingError.prototype = Object.create( Error.prototype );
+	LinkMissingError.prototype.constructor = LinkMissingError;
+
 	function expandLink( action, data ) {
 		var href = URI.expand( action.href, data ).href();
 		var query = data[ "?" ];
@@ -158,7 +168,7 @@
 				"invoke.resource": function( resource, rel, data, headers, success, err ) {
 					var resourceDef = resource._links[ rel ];
 					if ( !resourceDef ) {
-						throw new Error( "No link definition for rel '" + rel + "'" );
+						return err( new LinkMissingError( "No link definition for rel '" + rel + "'", rel ) );
 					}
 					if ( resourceDef.templated || resourceDef.parameters || data[ "?" ] ) {
 						resourceDef = _.extend( {}, resourceDef, { href: expandLink( resourceDef, data ) } );
@@ -337,6 +347,8 @@
 			} );
 		};
 	};
+
+	halonFactory.LinkMissingError = LinkMissingError;
 
 	return halonFactory;
 } ) );

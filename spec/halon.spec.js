@@ -292,6 +292,35 @@ describe( "halon", function() {
 				consoleStub.restore();
 			} );
 		} );
+		describe( "with missing options", function() {
+			var hc;
+			var results = [];
+			var error;
+			before( function( done ) {
+				hc = halon( {
+					root: "http://localhost:8088/analytics/api",
+					knownOptions: {
+						board: [ "self", "getUsers", "getCardTypes" ],
+						missing: [ "notHere" ]
+					},
+					adapter: adapterFactory( results ),
+					version: 2,
+					start: true
+				} );
+				hc.connect();
+				hc.missing.notHere()
+					.then( function( res ) {
+						done();
+					}, function( err ) {
+						error = err;
+						done();
+					} );
+			} );
+			it( "should reject with a LinkMissingError", function() {
+				error.should.be.instanceOf( halon.LinkMissingError );
+				error.link.should.equal( "missing:notHere" );
+			} );
+		} );
 	} );
 
 	describe( "when using a halon instance", function() {
