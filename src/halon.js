@@ -332,9 +332,9 @@
 					if ( body && body[ 0 ] === "{" ) {
 						var isJson = body && body !== "" && body !== "{}";
 						json = isJson ? JSON.parse( body ) : {};
-						json.status = resp.statusCode;
+						json._status = resp.statusCode;
 					} else if ( body ) {
-						body.status = resp.statusCode;
+						body._status = resp.statusCode;
 					}
 					if ( err ) {
 						reject( err );
