@@ -1,5 +1,8 @@
 ### Current
 
+### 0.4.0
+ * Remove addition of `status` property to response in request adapter to prevent collision with resources named status.
+
 ### 0.3.6
 * Adding custom LinkMissingError for when a known option is missing its link.
 * Fixes issue where a missing link error could not be handled as a promise rejection.
