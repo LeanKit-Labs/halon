@@ -1,5 +1,8 @@
 ### Current
 
+### 0.4.1
+ * Updated jQuery adapter to enforce root host in urls when calling resource endpoints
+
 ### 0.4.0
  * Remove addition of `status` property to response in request adapter to prevent collision with resources named status.
 
@@ -28,7 +31,7 @@ Expose followResourceLink to API
  * Updated jQuery adapter to pass error argument instead of jqXHR arg to rejection handler
 
 ### 0.2.1
- * jQuery adapter now prconditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
+ * jQuery adapter now conditionally stringifies JSON data based on if the request is a `POST`, `PATCH`, or `PUT`
 
 ### 0.2.0
  * jQuery adapter now will JSON stringify data and add `application/json` Content-Type when data is present. If data is already a string it will be left alone.
