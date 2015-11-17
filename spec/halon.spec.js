@@ -1057,7 +1057,7 @@ describe( "halon", function() {
 				it( "should prepare JSON data when included", function() {
 					faux$.ajax.secondCall.should.be.calledWith( {
 						type: "POST",
-						url: "/analytics/api/elevated/gimme",
+						url: "http://localhost:8088/analytics/api/elevated/gimme",
 						headers: {
 							Accept: "application/hal.v3+json"
 						},
@@ -1073,7 +1073,7 @@ describe( "halon", function() {
 				it( "should not attempt to JSON encode a string", function() {
 					faux$.ajax.thirdCall.should.be.calledWith( {
 						type: "POST",
-						url: "/analytics/api/elevated/gimme",
+						url: "http://localhost:8088/analytics/api/elevated/gimme",
 						headers: {
 							Accept: "application/hal.v3+json"
 						},
@@ -1108,7 +1108,7 @@ describe( "halon", function() {
 				it( "should not attempt to JSON encode data", function() {
 					faux$.ajax.secondCall.should.be.calledWith( {
 						type: "GET",
-						url: "/analytics/api/board/101",
+						url: "http://localhost:8088/analytics/api/board/101",
 						headers: {
 							Accept: "application/hal.v3+json"
 						},
