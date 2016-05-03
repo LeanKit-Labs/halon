@@ -1,5 +1,9 @@
 ### Current
 
+### 0.4.2
+
+* Add data to jQuery error rejections
+
 ### 0.4.1
  * Updated jQuery adapter to enforce root host in urls when calling resource endpoints
 
