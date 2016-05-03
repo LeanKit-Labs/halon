@@ -299,6 +299,7 @@
 					.then( resolve, function( jqXhr, respText, e ) {
 						var err = new Error( e );
 						err.status = jqXhr.status;
+						err.data = jqXhr.responseJSON;
 						reject( err );
 					} );
 			} );

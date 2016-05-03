@@ -1002,7 +1002,7 @@ describe( "halon", function() {
 
 					var ajaxStub = sinon.stub().returns( {
 						then: function( res, rej ) {
-							rej( { status: 404 }, "other", "Forbidden" );
+							rej( { status: 404, responseJSON: { message: "More info yo" } }, "other", "Forbidden" );
 						}
 					} );
 
@@ -1023,6 +1023,7 @@ describe( "halon", function() {
 					hc.connect().then( null, function( err ) {
 						err.toString().should.match( /Forbidden/ );
 						err.status.should.equal( 404 );
+						err.data.should.eql( { message: "More info yo" } );
 						done();
 					} );
 				} );
