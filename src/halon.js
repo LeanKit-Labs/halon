@@ -170,6 +170,7 @@
 					if ( !resourceDef ) {
 						return err( new LinkMissingError( "No link definition for rel '" + rel + "'", rel ) );
 					}
+
 					if ( resourceDef.templated || resourceDef.parameters || data[ "?" ] ) {
 						resourceDef = _.extend( {}, resourceDef, { href: expandLink( resourceDef, data ) } );
 					}
@@ -289,7 +290,11 @@
 				data: options.data
 			};
 
-			if ( options.data && _.contains( autoStringify, link.method.toUpperCase() ) ) {
+			if ( options.data && options.data.formData ) {
+				ajaxDef.data = options.data.formData;
+				ajaxDef.contentType = false;
+				ajaxDef.processData = false;
+			} else if ( options.data && _.contains( autoStringify, link.method.toUpperCase() ) ) {
 				ajaxDef.data = typeof options.data === "string" ? options.data : JSON.stringify( options.data );
 				ajaxDef.contentType = "application/json";
 			}
