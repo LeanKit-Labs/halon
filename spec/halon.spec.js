@@ -746,7 +746,7 @@ describe( "halon", function() {
 			} );
 		} );
 
-		describe( "when sending formData (request adapter only)", function() {
+		describe( "when sending formData (request adapter)", function() {
 			var results = [];
 			var resp;
 			var fauxRequest = requestFactory( adapterFactory( results ) );
@@ -760,6 +760,7 @@ describe( "halon", function() {
 				return hc.connect()
 					.then( function( hc ) {
 						hc.package.upload( {
+							id: "1234",
 							formData: {
 								"myFile.txt": { pretendFileStream: true }
 							}
@@ -775,7 +776,7 @@ describe( "halon", function() {
 			it( "should create options with formData property", function() {
 				results[ 2 ][ 1 ].should.eql( {
 					method: "POST",
-					url: "http://localhost:8088/analytics/api/nonstop/upload",
+					url: "http://localhost:8088/analytics/api/nonstop/1234/upload",
 					headers: { Accept: "application/hal.v3+json" },
 					formData: { "myFile.txt": { pretendFileStream: true } }
 				} );
@@ -1116,6 +1117,51 @@ describe( "halon", function() {
 						dataType: "json",
 						data: { id: 101 }
 					} );
+				} );
+			} );
+
+			describe( "when passing formData", function() {
+				var formData;
+
+				before( function() {
+					var ajaxStub = sinon.stub();
+					ajaxStub.onFirstCall().resolves( require( "./mockResponses/options.json" ) );
+					ajaxStub.resolves( {} );
+
+					faux$ = {
+						ajax: ajaxStub
+					};
+
+					var hc = halon( {
+						root: "http://localhost:8088/analytics/api",
+						version: 3,
+						adapter: halon.jQueryAdapter( faux$ )
+					} );
+
+					formData = {};
+
+					return hc.connect().then( function( hc ) {
+						return hc.package.upload( {
+							id: "1234",
+							formData: formData
+						} );
+					} );
+				} );
+
+				it( "should pass the url", function() {
+					faux$.ajax.lastCall.args[ 0 ].url.should.equal( "http://localhost:8088/analytics/api/nonstop/1234/upload" );
+				} );
+
+				it( "should pass the formData", function() {
+					faux$.ajax.lastCall.args[ 0 ].data.should.equal( formData );
+				} );
+
+				it( "should set contentType to false", function() {
+					faux$.ajax.lastCall.args[ 0 ].contentType.should.be.false;
+				} );
+
+				it( "should set processData to false", function() {
+					faux$.ajax.lastCall.args[ 0 ].processData.should.be.false;
 				} );
 			} );
 		} );

@@ -187,8 +187,9 @@
             "method": "GET"
         },
         "package:upload": {
-            "href": "/analytics/api/nonstop/upload",
-            "method": "POST"
+            "href": "/analytics/api/nonstop/{id}/upload",
+            "method": "POST",
+            "templated": true
         },
         "elevated:gimme": {
             "href": "/analytics/api/elevated/gimme",
