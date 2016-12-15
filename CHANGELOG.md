@@ -1,5 +1,8 @@
 ### Current
 
+### 0.4.3
+* Added support for formData in jQuery adapter
+
 ### 0.4.2
 
 * Add data to jQuery error rejections
